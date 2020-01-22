@@ -1,0 +1,43 @@
+.login-header {
+    background: var(--ion-color-primary);
+    position: relative;
+    border-radius: 0em;
+}
+
+.login-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 15%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top-color: var(--ion-color-primary);
+    border-bottom: 0;
+    margin-left: -15px;
+    margin-bottom: -15px;
+}
+
+.login-img {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    // width: 280px;
+}
+
+.div-button {
+    bottom: 10%;
+    position: absolute;
+    width: 100%;
+    display: flex;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.div-button ion-button {
+    flex: 1;
+}
+
+.div-button ion-button:last-child {
+    color: black;
+}
