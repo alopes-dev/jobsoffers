@@ -1,33 +1,48 @@
 import React, { Component } from 'react'
-// import {donut, pie, bar,area,serieArea,responsiveChart,seriesresponsiveChart,doubleLine,serieDoubleLine} from "../../charts/contains/iss-options";
-import { Col, Row, Card, CardHeader, CardBody } from 'reactstrap';
-import MyComponent from '../../charts/iss-apexCharts';
-// import IssApexCharts from "../../charts/iss-apexCharts";
+import { Col, Row } from 'reactstrap';
+import Index from '../../ResusibleComponents/@tables';
+
+const data = [
+    {icon:'flaticon-coins text-success',name:'Rendimento', value:'1,982'},
+    {icon:'flaticon-users text-primary',name:'Subscribers', value:'1303'},
+    {icon:'flaticon-graph text-success',name:'Revenue', value:'1,982'},
+    {icon:'flaticon-interface-6 text-warning',name:'Number', value:'1,982'},
+]
+
 export default class Dashboard extends Component {
     render() {
         return (
             <div>
-                <Row>
-                <Col xl="4">
-              <Card>
-                <CardHeader className="bg-transparent">
-                  <Row className="align-items-center">
-                    <div className="col">
-                      <h6 className="text-uppercase text-muted ls-1 mb-1">
-                        Actuação
-                      </h6>
-                      <h5 className="h3 mb-0">Total de pedidos</h5>
-                    </div>
-                  </Row>
-                </CardHeader>
-                <CardBody>
-                  <div className="chart">
-                    <MyComponent/>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-                </Row>
+                 <Index
+                  ilustrate={{data}}
+                  values={[3]}
+                  options={{
+                    Salario:{
+                        preview:"Salário"
+                    },
+                    Experiencia:{
+                        preview:"Experiência"
+                    },
+                    NumVagas:{
+                        preview:"Nº de Vagas"
+                    },
+                    TipoFuncao:{
+                        preview:"Tipo de Função"
+                    },
+                    TipoFormacao:{
+                        preview:"Tipo de Formação"
+                    },
+                    Provincia:{
+                        preview:"Tipo de Função"
+                    },
+                    Nacionalidade:{
+                        preview:"Nacionalidade"
+                    },
+                    Estado:{
+                        preview:"Estado"
+                    },
+                }}
+                 />
             </div>
         )
     }

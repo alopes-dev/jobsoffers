@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 export default class NavBarHeader extends Component {
     render() {
         return (
-            <nav className="navbar navbar-header navbar-expand-lg nvas"  data-background-color="blue2">
+            <nav className="navbar navbar-header navbar-expand-lg nvas"  data-background-color="dark">
 
             <div className="container-fluid">
                 <div className="collapse" id="search-nav">

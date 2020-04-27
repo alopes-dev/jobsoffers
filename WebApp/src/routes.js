@@ -1,98 +1,105 @@
-import AddCandidato from './components/Views/Candidato/addCandidato'
-import ListCandidato from './components/Views/Candidato/listCandidato'
-import AddOportunidade from './components/Views/Oportunidade/addOportunidade';
+import AddCandidato from './components/Views/Candidato/addCandidato';
+import ListCandidato from './components/Views/Candidato/listCandidato';
+import CoreOportunidade from './components/Views/Oportunidade/index';
 import Dashboard from './components/Views/Dashboard/dashboard';
+import ListOportunidade from './components/Views/Oportunidade/listOportunidade';
+import VOp360 from './components/Views/Oportunidade/360';
 
-const routes = [
-
-    {
-        name: "Dashboard",
-        path: "/dashboard",
-        icon: "flaticon-home",
+const routes = [{
+        name: 'Dashboard',
+        path: '/dashboard',
+        icon: 'flaticon-home',
         layout: '/admin',
         components: Dashboard
     },
 
     {
-        name: "Oportunidade",
-        icon: "flaticon-idea",
+        name: 'Oportunidade',
+        icon: 'flaticon-idea',
         collapse: true,
         children: [{
-                name: "Oportunidades",
-                path: "/analitics",
+                name: 'Oportunidades',
+                path: '/list-oportunidade',
+                components: ListOportunidade
             },
             {
-                name: "Novo Oportunidade",
-                path: "/oportunidade",
-                components: AddOportunidade,
+                name: 'Novo Oportunidade',
+                path: '/oportunidade',
+                components: CoreOportunidade,
                 privice: 'admin'
+            },
+            {
+                name: 'Visão Geral da Oportunidade',
+                path: '/general-view',
+                show: false,
+                components: VOp360,
+                privice: 'admin',
+                aliasIcon: 'flaticon-layers-1'
             }
         ]
-
     },
     {
-        name: "Candidato",
-        icon: "icon-people",
+        name: 'Candidato',
+        icon: 'icon-people',
         collapse: true,
         children: [{
-                name: "Candidatos",
-                path: "/list-candidato",
+                name: 'Candidatos',
+                path: '/list-candidato',
                 action: 'Listagem',
                 components: ListCandidato,
                 aliasIcon: 'icon-people'
             },
             {
-                name: "Novo Candidatos",
-                path: "/candidato",
+                name: 'Novo Candidatos',
+                path: '/candidato',
                 components: AddCandidato,
                 action: 'Formúlario',
                 privice: 'admin',
                 aliasIcon: 'icon-user-follow'
             }
         ]
-
     },
     {
-        name: "Candidatura",
-        path: "/Candidatura",
-        icon: "icon-tag",
+        name: 'Candidatura',
+        path: '/Candidatura',
+        icon: 'icon-tag'
     },
     {
-        name: "Serviços",
-        path: "/servicos",
-        icon: "flaticon-technology-1",
+        name: 'Serviços',
+        path: '/servicos',
+        icon: 'flaticon-technology-1'
     },
     {
-        name: "Alerta de vagas",
-        path: "/alertaDeVagas",
-        icon: "flaticon-alarm-1",
+        name: 'Alerta de vagas',
+        path: '/alertaDeVagas',
+        icon: 'flaticon-alarm-1'
     },
     {
-        name: "Curriculo",
-        path: "/curriculo",
-        icon: "flaticon-shapes",
+        name: 'Curriculo',
+        path: '/curriculo',
+        icon: 'flaticon-shapes'
     },
     {
-        name: "Procurar VC",
-        path: "/procurarVC",
-        icon: "flaticon-search-1",
+        name: 'Procurar VC',
+        path: '/procurarVC',
+        icon: 'flaticon-search-1'
     },
     {
-        name: "Beneficios",
-        path: "/Beneficios",
-        icon: "icon-support",
+        name: 'Beneficios',
+        path: '/Beneficios',
+        icon: 'icon-support',
         components: AddCandidato
     },
     {
-        name: "Empresa",
-        path: "/Empresa",
-        icon: "icon-compass",
+        name: 'Empresa',
+        path: '/Empresa',
+        icon: 'icon-compass'
     },
     {
-        name: "Cargos",
-        path: "/Cargos",
-        icon: "icon-briefcase",
+        name: 'Cargos',
+        path: '/Cargos',
+        icon: 'icon-briefcase'
     }
-]
+];
 
 export default routes;

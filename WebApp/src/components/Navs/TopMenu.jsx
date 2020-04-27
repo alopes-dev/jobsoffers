@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 export default class TopMenu extends Component {
     render() {
         return (
-            <div className="logo-header" data-background-color="blue2">
+            <div className="logo-header" data-background-color="dark">
 				<a href="/" className="logo">
 					<img src="./img/jobsNoBackGround.png" alt="navbar brand" className="navbar-brand"  style={{height:"100%"}}/> 
 				</a>

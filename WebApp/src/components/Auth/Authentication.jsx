@@ -12,7 +12,12 @@ import {
 import Field from "../ResusibleComponents/Fields/Field";
 import { isEmpty } from "../../helpers";
 import Spinner from "../ResusibleComponents/Spinner";
+
 import { Animated } from "react-animated-css";
+
+import { Form } from '@unform/web'
+import * as Yup from "yup";
+import unFormValidator from "../ResusibleComponents/Fields/contains/funcs";
 // core components
 
 
@@ -22,7 +27,9 @@ class Authentication extends React.Component {
         this.options = [
             {name:"Candidato",icon:'candidato.png',margign:'mr-3',margignL:'60px'},
             {name:"Empregador",icon:'empregador.png',margign:'ml-3'}
-        ]
+        ];
+        this.checker = 'login';
+        this.Ischema = null;
         this.state = {
             action:'',
             papel:'',
@@ -33,6 +40,9 @@ class Authentication extends React.Component {
                 password:''
             } 
         }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.formRef = React.createRef(null)
     }
     
      componentWillMount(){
@@ -46,6 +56,7 @@ class Authentication extends React.Component {
 
   registerFields(){
       return(
+          
         <Col md="12">
             <Animated
                     animationIn="jackInTheBox"
@@ -219,6 +230,7 @@ class Authentication extends React.Component {
     }
 
   register(){
+    this.checker = 'register'
         return(
             <Row className="ml-3 mr-3">
                 {
@@ -233,6 +245,7 @@ class Authentication extends React.Component {
   }
 
   login(){
+    this.checker = 'login'
     return (
         <Animated
         animationIn="jackInTheBox"
@@ -251,20 +264,10 @@ class Authentication extends React.Component {
                     <Col md="8 login-center">
                         <Field
                             label="Email / Username"
-                            type="text"
+                            type="email"
                             fieldtype="input"
-                            name="emai"
+                            name="email"
                             placeholder="António"
-                            msm={this.state.username}
-                            onChange={e=>{
-                                this.refresh(e)
-                                const {value} = e.target
-                                this.setState(p=>{
-                                    const login = Object.assign({},p.login)
-                                    login.username = value
-                                    return {login}
-                                })
-                            }}
                         />
                     </Col>
                 </Row>
@@ -274,29 +277,14 @@ class Authentication extends React.Component {
                             label="Username"
                             type="password"
                             fieldtype="input"
-                            name="emai"
+                            name="password"
                             placeholder="*****"
                             msm={this.state.password}
-                            onChange={e=>{
-                                this.refresh(e)
-                                const {value} = e.target
-                                this.setState(p=>{
-                                    const login = Object.assign({},p.login)
-                                    login.password =  value
-                                    return {login}
-                                })
-                            }}
                         />
                     </Col>
                     <Col xl="12 p-2 ">
                         <div style={{marginLeft: "106px",marginTop: "20px"}}>
-                            <Button className="ml-2 btn-primary"
-                                onClick={e=>{
-                                    this.handleLogin(e)
-                                }}
-                            >
-                                Entrar
-                            </Button>
+                            <Button className="ml-2 btn-primary" type="submit" > Entrar </Button>
                         </div>
                     </Col>
                 </Row>
@@ -313,43 +301,27 @@ class Authentication extends React.Component {
 
   }
 
-  handleLogin(ev){
-     // document.querySelector()
-    let _BTN = ev.target
-    _BTN.innerHTML = 'A logar ...'
-    const {login} = this.state;
-    console.log(login)
-    if(!isEmpty(login)){
-        const {username, password}  = login;
-        if(isEmpty(username)){
-            this.setState({username:{
-                text:"Username requerido",
-                type:"danger",
-                show:true,
-                validate:"has-error"
-            }})
-        }
+ async handleSubmit(data, {reset}){
 
-        if(isEmpty(password)){
-            this.setState({password:{
-                text:"Password requerido",
-                type:"danger",
-                show:true,
-                validate:"has-error"
-            }})
-        }
-
-        if(!isEmpty(username) && !isEmpty(password)){
-            setTimeout(()=>{
-                _BTN.innerHTML = 'Entrar';
-                window.location = '/dashboard'
-            },3000)
-            return;
-        }
-        _BTN.innerHTML = 'Entrar';
+    if(this.checker === 'login'){
+       return this.onLogin({data,reset})
     }
-    return
-    
+  }
+
+  async onLogin({data,reset}){
+
+    this.Ischema = {
+        email: Yup.string().email('E-mail inválido!!').required('E-mail é obrigatória...'),
+        password:Yup.string().required('A palavra passe é obrigatória...')
+    }
+
+    const isValid = await unFormValidator(this.formRef,{data,reset},this.Ischema);
+
+    if(isValid.success){
+        setTimeout(()=>{
+            window.location = '/dashboard'
+        },3000)
+    }
   }
 
   forgetPassword(){
@@ -425,14 +397,17 @@ class Authentication extends React.Component {
                                             </div>
                                         </div>
                                         <div className="form-fields">
-                                            {
-                                              action === 'forget'
-                                              ?  this.forgetPassword()
-                                              : action === 'registe'
-                                              ? this.register()
-                                              :  this.login()
-                                            }
+                                             <Form ref={this.formRef} onSubmit={this.handleSubmit}>
+                                                {
+                                                action === 'forget'
+                                                ?  this.forgetPassword()
+                                                : action === 'registe'
+                                                ? this.register()
+                                                :  this.login()
+                                                }
+                                            </Form>
                                         </div>
+
                                     </div>
                                 </Col>
                             </Row>

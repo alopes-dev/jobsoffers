@@ -1,6 +1,8 @@
 import React from 'react'
 import { isEmpty } from '../../../helpers';
-import Select from 'react-select'
+
+import Input from './contains/input';
+import ISelect from './contains/select';
 /**
  * Validete options : has-success, has-error,
  * @param {
@@ -17,21 +19,7 @@ export default function Field(props) {
     }
     switch (TYPE.toLowerCase()) {
         case 'input':
-            return (
-                <div className={`form-group mb-2 p-0 ${validate}`}>
-                    <label htmlFor={id}>{label}</label>
-                    <input  className="form-control mb-0" {...props}/>
-                    {
-                        !isEmpty(msm)
-                        ? 
-                            msm.show !== undefined &&  msm.show === true
-                            ?<small id="" className={`form-text  text-${msm.type.toLowerCase()}` }>{!isEmpty(msm.text) ? msm.text : 'Nenhum mensagem'}</small>
-                            :''
-                        :''
-                    }
-                   
-                </div>
-            )
+            return  <Input {...props} />
         case 'textarea':
             return (
                 <div className="form-group">
@@ -40,16 +28,7 @@ export default function Field(props) {
                 </div>
             )
         case 'select':
-            return (
-                <div className=" mb-2">
-                    <label htmlFor={id}
-                        style={{marginBottom: ".5rem", color: "#495057", fontWeight: "600", fontSize: "1rem",  whiteSpace: "nowrap"}}
-                    >{label}</label>
-                    <Select 
-                     {...props}
-                    />
-                </div>
-            )
+           return <ISelect {...props} />
         default:
             return <></>
     }

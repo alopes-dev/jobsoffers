@@ -1,0 +1,58 @@
+Escolha a área funcional->
+Actividade agrícola->
+Administração e apoio de escritório->
+Banca, seguros-> 
+Beleza, fitness e desporto-> <
+Ciências-> 
+Compras, logística e comércio-> 
+Consultoria, auditoria e estratégia empresarial-> 
+Engenharia-> 
+Ensino, formação e línguas-> 
+Finanças e contabilidade-> 
+Gestão e executivo-> 
+Imobiliário e construção-> 
+Indústria editorial-> 
+Informática e TI-> 
+Jurídico-> 
+Marketing, comunicação e relações públicas-> 
+Moda e espectáculo-> 
+Pesquisa e Desenvolvimento->
+Petróleos – Técnico especializado-> 
+Profissionais, operários e ofícios-> 
+Qualidade, Higiene, Segurança e Ambiente-> 
+Recursos Humanos-> 
+Restauração, hotelaria e turismo-> 
+Saúde-> 
+Vendas e atendimento ao cliente->
+
+
+
+
+
+
+
+
+******************************
+* Tipo de emprego
+
+Estágio->
+Contrato de serviços-> 
+Tempo indeterminado-> 
+Tempo determinado->
+A definir->
+
+
+**************************/**
+* Formação académica
+
+Ensino Primário-> 
+Ensino Secundário->
+Ensino Superior Pedagógico-> 
+Formação Técnico Profissional-> 
+Pós-graduação Profissional-> 
+Frequência universitária->
+Bacharelato-> 
+Licenciatura-> 
+Outro curso de pós-grado-> 
+MBA / Mestrado-> 
+Doutoramento / PhD->

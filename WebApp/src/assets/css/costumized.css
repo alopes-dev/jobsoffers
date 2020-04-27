@@ -1,10 +1,14 @@
+body {
+    background-color: whitesmoke !important;
+}
+
 .bg-secondary-gradientn {
-    background: linear-gradient(-45deg, #13102f, #423d82)!important;
+    background: linear-gradient(-45deg, #13102f, #423d82) !important;
     /* background-image: url('../bg-abstract2.png'); */
 }
 
 .bg- {
-    background: #6861ce!important;
+    background: #6861ce !important;
 }
 
 .clips {
@@ -75,7 +79,7 @@
 }
 
 .login .hover {
-    top: 29px!important;
+    top: 29px !important;
 }
 
 .form-fields .fw-mediumbold {
@@ -85,4 +89,17 @@
 .login-center {
     left: 50%;
     transform: translateX(-50%);
+}
+
+.has-error.react-select__control {
+    border-color: #f25961 !important;
+}
+
+.no-padding .card-body {
+    padding: 0 !important;
+}
+
+.cardTitle {
+    color: #83848a;
+    margin-bottom: 5px;
 }

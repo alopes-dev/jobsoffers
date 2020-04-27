@@ -1,13 +1,14 @@
-require('dotenv').config()
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const db = require('./api/database/dbSetting')
-const API = '/api/'
-const cors = require('cors')
-
+const db = require('./api/database/dbSetting');
+const API = '/api/';
+var app = express();
+const cors = require('cors');
+app.use(cors({ origin: true, credentials: true }));
 /**
  * Routes
  */
@@ -35,11 +36,7 @@ var sectorDeAtividadesRouter = require('./api/routes/sectorDeAtividade');
 var tipoDetalhesRouter = require('./api/routes/tipoDetalhe');
 var tipoDocumentosRouter = require('./api/routes/tipoDocumento');
 
-
-var app = express();
-
 //Allow cross - Origin
-app.use(cors())
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -53,10 +50,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 const graphqlHTTP = require('express-graphql');
-const schema = require('./api/graphql/schema')
-    /**
-     * APIs
-     */
+const schema = require('./api/graphql/schema');
+/**
+ * APIs
+ */
 
 app.use(`${API}estados`, estadoRouter);
 app.use(`${API}avaliacaoCurriculos`, avaliacaoCurriculosRouter);
@@ -81,10 +78,13 @@ app.use(`${API}sectorDeAtividades`, sectorDeAtividadesRouter);
 app.use(`${API}tipoDetalhes`, tipoDetalhesRouter);
 app.use(`${API}tipoDocumentos`, tipoDocumentosRouter);
 
-app.use('/graphql', graphqlHTTP({
-    schema,
-    graphiql: true
-}));
+app.use(
+    '/graphql',
+    graphqlHTTP({
+        schema,
+        graphiql: true,
+    })
+);
 
 /**
  * Authentication with DB
@@ -93,10 +93,9 @@ db.authenticate()
     .then(() => {
         console.log('Connection has been established successfully.');
     })
-    .catch(err => {
+    .catch((err) => {
         console.error('Unable to connect to the database:', err);
     });
-
 
 // const typeDefs = gql `
 //     type Query {

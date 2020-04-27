@@ -5,20 +5,20 @@ const Beneficio = db.define('Beneficio', {
     Id: {
         type: Sequelize.STRING(50),
         defaultValue: Sequelize.UUIDV1,
-        primaryKey: true
+        primaryKey: true,
     },
     Designacao: {
         type: Sequelize.STRING,
-        notEmpty: true
+        notEmpty: true,
     },
     Descricao: {
         type: Sequelize.STRING,
-        notEmpty: false
+        notEmpty: false,
     },
     EstadoId: {
         type: Sequelize.STRING(50),
-        notEmpty: true
-    }
+        notEmpty: true,
+    },
 });
 
 module.exports = Beneficio;

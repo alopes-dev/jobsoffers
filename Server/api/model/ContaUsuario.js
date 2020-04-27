@@ -5,36 +5,36 @@ const ContaUsuario = db.define('ContaUsuario', {
     Id: {
         type: Sequelize.STRING(50),
         defaultValue: Sequelize.UUIDV1,
-        primaryKey: true
+        primaryKey: true,
     },
     UserName: {
         type: Sequelize.STRING,
-        notEmpty: true
+        notEmpty: true,
     },
     Email: {
         type: Sequelize.STRING,
-        notEmpty: true
+        notEmpty: true,
     },
     EmailAlternativo: {
         type: Sequelize.STRING,
-        notEmpty: true
+        notEmpty: true,
     },
-    Papel: {
+    Role: {
         type: Sequelize.STRING,
-        notEmpty: true
+        notEmpty: true,
     },
     PassWord: {
         type: Sequelize.STRING(50),
-        notEmpty: false
+        notEmpty: false,
     },
     PessoaId: {
         type: Sequelize.STRING(50),
-        notEmpty: true
+        notEmpty: true,
     },
     EstadoId: {
         type: Sequelize.STRING(50),
-        notEmpty: true
-    }
+        notEmpty: true,
+    },
 });
 
 module.exports = ContaUsuario;

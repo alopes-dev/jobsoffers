@@ -1,0 +1,12 @@
+export const OPORTUNIDADE_TYPE = {
+    ADD_OPORTUNITY: "ADD_OPORTUNITY",
+    ASYNC_ADD_OPORTUNITY: "ASYNC_ADD_OPORTUNITY",
+    REMOVE_OPORTUNITY: "REMOVE_OPORTUNITY",
+    UPDATE_OPORTUNITY: "UPDATE_OPORTUNITY",
+    SET_VALUE: "SET_VALUES",
+    GET_FUNCOES: "ASYNC_GET_FUNCOES",
+}
+
+// export const SetValue = {
+//     TOVARIABLES: (value, field) => { return { type: "SET_VALUE", value, field } },
+// }

@@ -5,48 +5,65 @@ const Oportunidade = db.define('Oportunidade', {
     Id: {
         type: Sequelize.STRING(50),
         defaultValue: Sequelize.UUIDV1,
-        primaryKey: true
-    },
-    Nome: {
-        type: Sequelize.STRING(50),
-        notEmpty: true
+        primaryKey: true,
     },
     CargaHoraria: {
-        type: Sequelize.INTEGER,
-        notEmpty: false
+        type: Sequelize.STRING(50),
+        notEmpty: false,
+    },
+    DataLimite: {
+        type: Sequelize.STRING(50),
+        notEmpty: false,
     },
     Salario: {
         type: Sequelize.FLOAT,
-        notEmpty: false
+        notEmpty: false,
     },
-    Localizacao: {
-        type: Sequelize.STRING(50),
-        notEmpty: false
-    },
+
     IsFinalizado: {
         type: Sequelize.INTEGER,
-        notEmpty: false
+        notEmpty: false,
     },
-    CidadeId: {
-        type: Sequelize.DATE,
-        notEmpty: false
-    },
-    BeneficioId: {
+    Cidade: {
         type: Sequelize.STRING(50),
-        notEmpty: false
-    },
-    EmpregadorId: {
-        type: Sequelize.STRING(50),
-        notEmpty: false
-    },
-    CargoId: {
-        type: Sequelize.STRING(50),
-        notEmpty: false
+        notEmpty: false,
     },
     EstadoId: {
         type: Sequelize.STRING(50),
-        notEmpty: true
-    }
+        notEmpty: true,
+    },
+    TipoEmpregoId: {
+        type: Sequelize.STRING(50),
+        notEmpty: true,
+    },
+    CargoId: {
+        type: Sequelize.STRING(50),
+        notEmpty: true,
+    },
+    TipoFormacaoId: {
+        type: Sequelize.STRING(50),
+        notEmpty: true,
+    },
+    TipoFuncaoId: {
+        type: Sequelize.STRING(50),
+        notEmpty: true,
+    },
+    ProvinciaId: {
+        type: Sequelize.STRING(50),
+    },
+    NacionalidadeId: {
+        type: Sequelize.STRING(50),
+    },
+    Experiencia: {
+        type: Sequelize.STRING(50),
+    },
+    NumVagas: {
+        type: Sequelize.STRING(50),
+        notEmpty: true,
+    },
+    Detalhes: {
+        type: Sequelize.STRING(50),
+    },
 });
 
 module.exports = Oportunidade;

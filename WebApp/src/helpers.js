@@ -38,3 +38,9 @@ exports.isEmpty = (input) => {
 }
 exports.isTrue = input => input === true;
 exports.isEqualToZero = input => input === 0;
+
+exports.setSelectOp = (data, { value, label }) => {
+    return data.map(d => {
+        return { value: d[value], label: d[label] }
+    })
+}

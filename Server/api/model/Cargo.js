@@ -1,20 +1,20 @@
 const Sequelize = require('sequelize');
 const db = require('../database/dbSetting');
 
-const Cargo = db.define('Cargo', {
+const Cargo = db.define('Cargos', {
     Id: {
         type: Sequelize.STRING(50),
         defaultValue: Sequelize.UUIDV1,
-        primaryKey: true
+        primaryKey: true,
     },
     Designacao: {
         type: Sequelize.STRING(50),
-        notEmpty: true
+        notEmpty: true,
     },
     EstadoId: {
         type: Sequelize.STRING(50),
-        notEmpty: true
-    }
+        notEmpty: true,
+    },
 });
 
 module.exports = Cargo;
