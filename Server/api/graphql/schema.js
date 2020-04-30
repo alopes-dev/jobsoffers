@@ -1,6 +1,7 @@
 const { GraphQLObjectType, GraphQLSchema } = require('graphql');
 
 // Resolve Imported
+const { SettionMutation } = require('./Session');
 const { HobesResolve } = require('./HobesSchema');
 const { CargoResolve } = require('./CargosSchema');
 const { CidadeResolve } = require('./CidadesSchema');
@@ -19,7 +20,10 @@ const {
     TipoEmpregoResolve,
     TipoEmpregoMutation,
 } = require('./TipoEmpregoSchema');
-const { CandidaturaResolve } = require('./CandidaturasSchema');
+const {
+    CandidaturaResolve,
+    CandidaturaMutation,
+} = require('./CandidaturasSchema');
 const { TipoDetalheResolve } = require('./TipoDetalhesSchema');
 const {
     TipoFormacaoResolve,
@@ -95,6 +99,8 @@ const RootMutation = new GraphQLObjectType({
     fields: {
         ...EstadoMutation,
         ...PessoaMutation,
+        ...SettionMutation,
+        ...CandidaturaMutation,
         ...OportunidadeMutation,
         // ...AvaliacaoCurriculoMutation,
         // ...TipoEmpregoMutation,

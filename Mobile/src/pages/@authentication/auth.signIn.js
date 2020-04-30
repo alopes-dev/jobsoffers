@@ -1,20 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+
+import Input from '~/components/Fields/input';
 
 const AuthSignIn = () => {
   return (
     <View style={{ marginTop: 30 }}>
-      <TextInput
+      <Input
+        name="UserName"
         placeholder="E-mail / Username"
         style={styles.textInput}
         placeholderTextColor="white"
       />
-      <TextInput
+      <Input
         placeholder="Palavra Passe"
         secureTextEntry
         style={styles.textInput}
         placeholderTextColor="white"
+        name="PassWord"
       />
     </View>
   );

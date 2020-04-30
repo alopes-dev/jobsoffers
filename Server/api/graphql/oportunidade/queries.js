@@ -1,5 +1,7 @@
 const { GraphQLList, GraphQLString, GraphQLObjectType } = require('graphql');
+
 const Oportunidade = require('../../model/Oportunidade');
+
 const { OportunidadeType } = require('./type');
 
 const OportunidadeResolve = {
@@ -9,6 +11,14 @@ const OportunidadeResolve = {
             return Oportunidade.findAll()
                 .then((e) => e)
                 .catch((error) => error);
+        },
+    },
+    vagasDisponiveis: {
+        type: new GraphQLList(OportunidadeType),
+        async resolve(_, args) {
+            return await Oportunidade.findAll({
+                where: { IsFinalizado: 0 },
+            });
         },
     },
     oportunidade: {

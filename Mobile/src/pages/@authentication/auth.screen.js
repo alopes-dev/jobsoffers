@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,26 +8,40 @@ import {
   ImageBackground,
   TouchableWithoutFeedback,
   StatusBar,
+  ActivityIndicator,
   Keyboard,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icons from 'react-native-vector-icons/Ionicons';
 import * as Animatable from 'react-native-animatable';
-import { Avatar } from 'react-native-paper';
+
+import { Avatar, Snackbar } from 'react-native-paper';
+
 import AuthRegister from './auth.register';
 import AuthSignIn from './auth.signIn';
-const { height, width } = Dimensions.get('window');
+
 import { useAuth } from '~/contexts/auth';
 
+import { Form } from '@unform/mobile';
+import * as yup from 'yup';
+import unFormValidator from '~/components/Fields/validation';
+
+const { height, width } = Dimensions.get('window');
+
 const AuthenticationScreen = () => {
-  const { signIn } = useAuth();
+  const { signIn, signUp, isProcessing, flag } = useAuth();
+  const formRef = useRef(null);
   const [timer, setTimer] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [signInAnimation, setSignInAnimation] = useState('fadeInRightBig');
   const [registerAnimation, setRegisterAnimation] = useState('fadeInRightBig');
 
-  function handleSignIn() {
-    signIn();
+  const { isOpen, message } = flag;
+
+  function handleClick() {
+    // signIn();
+    formRef.current.submitForm();
   }
 
   function haveACount() {
@@ -90,98 +104,147 @@ const AuthenticationScreen = () => {
     };
   }, []);
 
+  const onDismissSnackBar = () => setVisible(false);
+
+  async function handleSubmit(data, { reset }) {
+    // let schema = {
+    //   Email: yup.string().required().email(),
+    //   Has_PassWord: yup.string().required(),
+    //   NomeCompleto: yup.string().required(),
+    // };
+    let schema = {
+      PassWord: yup.string().required(),
+      UserName: yup.string().required(),
+    };
+
+    let { success, data: values } = await unFormValidator(
+      formRef,
+      { data, reset },
+      schema,
+    );
+
+    if (!success) {
+      return setVisible(true);
+    }
+
+    // signUp(values);
+    signIn(values);
+  }
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0186ae" />
+      <Snackbar visible={isOpen} onDismiss={onDismissSnackBar}>
+        {message}
+      </Snackbar>
       <LinearGradient
         colors={['#0186ae', '#3fb3aa']}
         style={styles.linearGradient}
       >
-        <View style={styles.inputContainer}>
-          <View style={styles.logo}>
-            <Avatar.Image
-              size={140}
-              style={{ backgroundColor: 'transparent' }}
-              source={require('~/assets/jobs.png')}
-            />
-          </View>
-          {timer ? (
-            <Animatable.View animation={registerAnimation}>
-              <AuthRegister />
-            </Animatable.View>
-          ) : (
-            <Animatable.View animation={signInAnimation}>
-              <AuthSignIn />
-            </Animatable.View>
-          )}
+        <Form ref={formRef} onSubmit={handleSubmit}>
+          <View style={styles.inputContainer}>
+            <View style={styles.logo}>
+              <Avatar.Image
+                size={140}
+                style={{ backgroundColor: 'transparent' }}
+                source={require('~/assets/jobs.png')}
+              />
+            </View>
+            {timer ? (
+              <Animatable.View animation={registerAnimation}>
+                <AuthRegister />
+              </Animatable.View>
+            ) : (
+              <Animatable.View animation={signInAnimation}>
+                <AuthSignIn />
+              </Animatable.View>
+            )}
 
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginVertical: 10,
-            }}
-          >
-            {timer ? haveACount() : haveNotACount()}
-          </View>
-        </View>
-        <Animatable.View
-          style={{ flex: 1.1 }}
-          duration={500}
-          animation={isKeyboardVisible ? 'fadeOutDownBig' : 'fadeInUpBig'}
-        >
-          <ImageBackground
-            resizeMode="cover"
-            duration={500}
-            source={require('~/assets/Elipse.png')}
-            style={styles.image}
-          >
             <View
               style={{
-                width: width,
-                flex: 1,
-                height: height,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginVertical: 10,
               }}
             >
-              <TouchableWithoutFeedback onPress={handleSignIn}>
-                <View style={styles.signIn}>
-                  <Avatar.Icon
-                    size={24}
-                    icon={() => (
-                      <Icons
-                        name="ios-arrow-round-forward"
-                        size={32}
-                        style={{
-                          textAlign: 'center',
-                          color: '#0186ae',
-                          zIndex: 9,
-                        }}
-                      />
-                    )}
-                    style={{ backgroundColor: 'white' }}
-                  />
-                </View>
-              </TouchableWithoutFeedback>
+              {timer ? haveACount() : haveNotACount()}
+            </View>
+          </View>
+          <Animatable.View
+            style={{ flex: 1.1 }}
+            duration={500}
+            animation={isKeyboardVisible ? 'fadeOutDownBig' : 'fadeInUpBig'}
+          >
+            <ImageBackground
+              resizeMode="cover"
+              duration={500}
+              source={require('~/assets/Elipse.png')}
+              style={styles.image}
+            >
               <View
                 style={{
-                  flexDirection: 'row',
                   width: width,
-                  position: 'absolute',
-                  bottom: '40%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  flex: 1,
+                  height: height,
                 }}
               >
-                <Text style={{ color: '#000' }}>Também pode entrar com : </Text>
+                <TouchableWithoutFeedback onPress={handleClick}>
+                  <View style={styles.signIn}>
+                    {isProcessing ? (
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <ActivityIndicator size="large" color="#0186ae" />
+                      </View>
+                    ) : (
+                      <Avatar.Icon
+                        size={24}
+                        icon={() => (
+                          <Icons
+                            name="ios-arrow-round-forward"
+                            size={32}
+                            style={{
+                              textAlign: 'center',
+                              color: '#0186ae',
+                              zIndex: 9,
+                            }}
+                          />
+                        )}
+                        style={{ backgroundColor: 'white' }}
+                      />
+                    )}
+                  </View>
+                </TouchableWithoutFeedback>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: width,
+                    position: 'absolute',
+                    bottom: '40%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text style={{ color: '#000' }}>
+                    Também pode entrar com :{' '}
+                  </Text>
+                </View>
+                <View style={styles.bottomActions}>
+                  <Avatar.Icon
+                    size={48}
+                    icon="facebook"
+                    style={styles.action}
+                  />
+                  <Avatar.Icon size={48} icon="gmail" style={styles.action} />
+                  <Avatar.Icon size={48} icon="outlook" style={styles.action} />
+                </View>
               </View>
-              <View style={styles.bottomActions}>
-                <Avatar.Icon size={48} icon="facebook" style={styles.action} />
-                <Avatar.Icon size={48} icon="gmail" style={styles.action} />
-                <Avatar.Icon size={48} icon="outlook" style={styles.action} />
-              </View>
-            </View>
-          </ImageBackground>
-        </Animatable.View>
+            </ImageBackground>
+          </Animatable.View>
+        </Form>
       </LinearGradient>
     </View>
   );

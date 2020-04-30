@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const {
     GraphQLObjectType,
     GraphQLInt,
@@ -10,8 +11,8 @@ const uuid = require('uuid/v4');
 const Pessoa = require('../model/Pessoa');
 const Estado = require('../model/Estado');
 const Cidade = require('../model/Cidade');
-const Contacto = require('../model/Contacto');
-const Documento = require('../model/Documento');
+const ContactoModel = require('../model/Contacto');
+const DocumentoModel = require('../model/Documento');
 const ContaUsuario = require('../model/ContaUsuario');
 const PessoaContacto = require('../model/PessoaContacto');
 const PessoaDocumento = require('../model/PessoaDocumento');
@@ -33,28 +34,28 @@ const PessoaType = new GraphQLObjectType({
         Localizacao: { type: GraphQLString },
         Foto: { type: GraphQLString },
         Status: { type: GraphQLInt },
-        DocumentoId: { type: GraphQLString },
-        Documento: {
-            type: DocumentoType,
-            resolve(prev, args) {
-                return Documento.findOne({
-                        where: { Id: prev.DocumentoId },
-                    })
-                    .then((e) => e)
-                    .catch((error) => error);
-            },
-        },
-        ContactoId: { type: GraphQLString },
-        Contacto: {
-            type: ContactoType,
-            resolve(prev, args) {
-                return Contacto.findOne({
-                        where: { Id: prev.ContactoId },
-                    })
-                    .then((e) => e)
-                    .catch((error) => error);
-            },
-        },
+        // DocumentoId: { type: GraphQLString },
+        // Documento: {
+        //     type: DocumentoType,
+        //     resolve(prev, args) {
+        //         return Documento.findOne({
+        //                 where: { Id: prev.DocumentoId },
+        //             })
+        //             .then((e) => e)
+        //             .catch((error) => error);
+        //     },
+        // },
+        // ContactoId: { type: GraphQLString },
+        // Contacto: {
+        //     type: ContactoType,
+        //     resolve(prev, args) {
+        //         return Contacto.findOne({
+        //                 where: { Id: prev.ContactoId },
+        //             })
+        //             .then((e) => e)
+        //             .catch((error) => error);
+        //     },
+        // },
         CidadeId: { type: GraphQLString },
         Cidade: {
             type: CidadeType,
@@ -88,6 +89,8 @@ const PessoaInput = new GraphQLInputObjectType({
         Id: { type: GraphQLString },
         Nome: { type: GraphQLString },
         SobreNome: { type: GraphQLString },
+        Email: { type: GraphQLString },
+        Has_PassWord: { type: GraphQLString },
         DataNascimento: { type: GraphQLString },
         Localizacao: { type: GraphQLString },
         Foto: { type: GraphQLString },
@@ -134,73 +137,94 @@ const PessoaResolve = {
 };
 
 const PessoaMutation = {
-    pessoaInput: {
-        type: PessoaPayLoad,
+    addPessoa: {
+        type: PessoaType,
         args: {
             input: {
                 type: PessoaInput,
             },
         },
-        async resolve(parent, { input }) {
-            let { Documento, Contacto, PassWord, UserName, Role, EstadoId } = input,
-            ContactoId,
-            DocumentoId;
+        async resolve(_, { input }) {
+            const sequelize = require('../database/dbSetting');
+            const t = await sequelize.transaction();
 
-            delete input.Contacto;
-            delete input.Documento;
+            try {
+                let {
+                    Documento,
+                    Contacto,
+                    PassWord,
+                    Has_PassWord,
+                    Nome,
+                    SobreNome,
+                    Email,
+                    UserName,
+                    Provider,
+                } = input,
+                ContactoId,
+                DocumentoId;
 
-            if (!!Contacto) ContactoId = await addContactos(Contacto);
+                delete input.Email;
+                delete input.Contacto;
+                delete input.Documento;
+                delete input.Has_PassWord;
 
-            if (!!Documento) DocumentoId = await addDocumentos(Documento);
+                /**
+                 * Check user
+                 */
+                if (isEmpty(UserName)) UserName = `${Nome}${SobreNome}`;
 
-            const sysdate = new Date(Date.now());
+                let userExist = await ContaUsuario.findOne({
+                    where: { Email: Email },
+                });
 
-            const data = await Pessoa.create({
+                if (userExist) throw new Error('E-mail já existe, verifique....');
+
+                if (Has_PassWord) PassWord = await passWord_Hash(Has_PassWord);
+
+                if (!!Contacto)
+                    ContactoId = await addContactos(Contacto, { transaction: t });
+
+                if (!!Documento)
+                    DocumentoId = await addDocumentos(Documento, { transaction: t });
+
+                const sysdate = new Date(Date.now());
+
+                const pessoa = await Pessoa.create({
                     Id: uuid(),
                     ...input,
                     CreatedAt: sysdate,
                     UpdatedAt: sysdate,
-                })
-                .then((e) => e)
-                .catch((err) => err);
+                }, { transaction: t });
 
-            if (isEmpty(data.dataValues)) return null;
+                const { dataValues: pessoaValues } = pessoa;
 
-            const { Id: PessoaId, Nome, SobreNome } = data.dataValues;
+                if (isEmpty(pessoaValues))
+                    throw Error('Ocorreu algum erro ao Criar uma Pessoa');
 
-            let contactoPessoaId = await addContactoPessoa([
-                { PessoaId, ContactoId },
-            ]);
+                const { Id: PessoaId } = pessoaValues;
 
-            let documentoPessoaId = await addDocumentoPessoa([
-                { PessoaId, DocumentoId },
-            ]);
+                if (DocumentoId) await addDocumentoPessoa([{ PessoaId, DocumentoId }]);
 
-            if (isEmpty(Role)) Role = 'CLIENT';
+                if (ContactoId) await addContactoPessoa([{ PessoaId, ContactoId }]);
 
-            if (isEmpty(UserName)) UserName = `${Nome}${SobreNome}`;
+                if (isEmpty(Provider)) Provider = 1;
 
-            if (isEmpty(PassWord)) PassWord = CodeGenerator();
+                if (isEmpty(PassWord)) PassWord = await passWord_Hash(CodeGenerator());
 
-            let isOk = await addUser({
-                Role,
-                EstadoId,
-                UserName,
-                PassWord,
-                PessoaId,
-            });
+                await addUser({
+                    Provider,
+                    Email,
+                    UserName,
+                    PassWord,
+                    PessoaId,
+                }, { transaction: t });
 
-            values = [
-                documentoPessoaId,
-                contactoPessoaId,
-                PessoaId,
-                DocumentoId,
-                ContactoId,
-            ];
-
-            if (isEmpty(isOk)) goRollBack(values); // Make a RollBack when something goes wrong
-
-            return data.dataValues;
+                await t.commit();
+                return pessoaValues;
+            } catch (error) {
+                await t.rollback();
+                throw new Error(error.message);
+            }
         },
     },
 
@@ -234,96 +258,114 @@ const PessoaMutation = {
 
 /** Funções Auxiliares*/
 
-const addDocumentos = async(data = []) => {
-    if (isEmpty(data)) return null;
+const addDocumentos = async(data = [], transaction) => {
+    const docExist = await DocumentoModel.findOne({
+            where: { NumDocumento: data[0].NumDocumento },
+        },
+        transaction
+    );
 
-    osysdate = new Date(Date.now());
-    result = await Documento.create({
-        Id: uuid(),
-        ...data[0],
-        CreatedAt: osysdate,
-        UpdatedAt: osysdate,
-    });
+    if (docExist) throw Error('Número de documento já existe, verifica...');
 
-    if (isEmpty(result.dataValues)) return null;
+    const osysdate = new Date(Date.now());
 
-    return result.dataValues.Id;
-};
+    const result = await DocumentoModel.create({
+            Id: uuid(),
+            ...data[0],
+            CreatedAt: osysdate,
+            UpdatedAt: osysdate,
+        },
+        transaction
+    );
 
-const addContactos = async(data = []) => {
-    if (isEmpty(data)) return null;
-
-    osysdate = new Date(Date.now());
-    result = await Contacto.create({
-        Id: uuid(),
-        ...data[0],
-        CreatedAt: osysdate,
-        UpdatedAt: osysdate,
-    });
-
-    if (isEmpty(result.dataValues)) return null;
+    if (isEmpty(result.dataValues))
+        throw Error('Ocorreu algum erro ao Criar um Documento');
 
     return result.dataValues.Id;
 };
 
-const addContactoPessoa = async(data = []) => {
-    let result = [];
-    if (isEmpty(data)) return null;
+const addContactos = async(data = [], transaction) => {
+    const contactExist = await ContactoModel.findOne({
+            where: { Email: data[0].Email },
+        },
+        transaction
+    );
 
-    osysdate = new Date(Date.now());
+    if (contactExist) throw Error('Contacto já existe, tenta outro...');
+
+    const osysdate = new Date(Date.now());
+
+    result = await ContactoModel.create({
+            Id: uuid(),
+            ...data[0],
+            CreatedAt: osysdate,
+            UpdatedAt: osysdate,
+        },
+        transaction
+    );
+
+    if (isEmpty(result.dataValues))
+        throw Error('Ocorreu algum erro ao Criar um contacto');
+
+    return result.dataValues.Id;
+};
+
+const addContactoPessoa = async(data = [], transaction) => {
+    const osysdate = new Date(Date.now());
 
     data.forEach(async function(contPessoa) {
-        result = await PessoaContacto.create({
-            Id: uuid(),
-            ...contPessoa,
-            CreatedAt: osysdate,
-            UpdatedAt: osysdate,
-        });
+        const result = await PessoaContacto.create({
+                Id: uuid(),
+                ...contPessoa,
+                CreatedAt: osysdate,
+                UpdatedAt: osysdate,
+            },
+            transaction
+        );
+        if (isEmpty(result.dataValues))
+            throw Error('Ocorreu algum erro no Contacto da Pessoa');
     });
-
-    if (isEmpty(result.dataValues)) return null;
-
-    return result.dataValues.Id;
 };
 
-const addDocumentoPessoa = (data = []) => {
-    let result = [];
-    if (isEmpty(data)) return null;
-
-    osysdate = new Date(Date.now());
+const addDocumentoPessoa = async(data = [], transaction) => {
+    const osysdate = new Date(Date.now());
 
     data.forEach(async function(docPessoa) {
-        result = await PessoaDocumento.create({
+        try {
+            if (typeof docPessoa.DocumentoId !== 'string')
+                throw Error('DocumentoId must be a string');
+
+            const result = await PessoaDocumento.create({
+                    Id: uuid(),
+                    ...docPessoa,
+                    CreatedAt: osysdate,
+                    UpdatedAt: osysdate,
+                },
+                transaction
+            );
+
+            if (isEmpty(result.dataValues))
+                throw Error('Ocorreu algum erro no Documento da Pessoa');
+        } catch (error) {}
+    });
+};
+
+const addUser = async(data, transaction) => {
+    const osysdate = new Date(Date.now());
+
+    const result = await ContaUsuario.create({
             Id: uuid(),
-            ...docPessoa,
+            ...data,
             CreatedAt: osysdate,
             UpdatedAt: osysdate,
-        });
-    });
+        },
+        transaction
+    );
 
-    if (isEmpty(result.dataValues)) return null;
-
-    return result.dataValues.Id;
+    if (isEmpty(result.dataValues))
+        throw Error('Ocorreu algum erro ao Cadastrar um usuario');
 };
 
-const addUser = async(data) => {
-    if (isEmpty(data)) return null;
-
-    osysdate = new Date(Date.now());
-    result = await ContaUsuario.create({
-        Id: uuid(),
-        ...data,
-        CreatedAt: osysdate,
-        UpdatedAt: osysdate,
-    });
-
-    if (isEmpty(result.dataValues)) return null;
-
-    return result.dataValues;
-};
-
-const goRollBack = (values = []) => {
-    console.log(values);
-};
+const passWord_Hash = async(value) => await bcrypt.hash(value, 8);
 
 module.exports = { PessoaResolve, PessoaType, PessoaMutation };

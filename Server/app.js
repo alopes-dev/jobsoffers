@@ -78,14 +78,20 @@ app.use(`${API}sectorDeAtividades`, sectorDeAtividadesRouter);
 app.use(`${API}tipoDetalhes`, tipoDetalhesRouter);
 app.use(`${API}tipoDocumentos`, tipoDocumentosRouter);
 
-app.use(
-    '/graphql',
-    graphqlHTTP({
-        schema,
-        graphiql: true,
-    })
-);
+// app.use( '/graphql', graphqlHTTP({ schema, graphiql: true, }) );
 
+app.use('/graphql', (req, res) => {
+    graphqlHTTP({
+        schema: schema, //A GraphQLSchema instance from GraphQL.js. A schema must be provided.
+        graphiql: true,
+        context: { req, res },
+        customFormatErrorFn: (err) => {
+            // const error = getErrorCode(err.message);
+            console.log(err);
+            return { message: err.message, statusCode: err.statusCode };
+        },
+    })(req, res);
+});
 /**
  * Authentication with DB
  */
@@ -131,5 +137,9 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+const getErrorCode = (errorName) => {
+    return errorType[errorName];
+};
 
 module.exports = app;

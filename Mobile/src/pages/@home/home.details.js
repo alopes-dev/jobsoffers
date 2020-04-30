@@ -1,8 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
+  ActivityIndicator,
   StyleSheet,
   Modal,
   Dimensions,
@@ -23,7 +24,12 @@ import {
 
 import Icons from 'react-native-vector-icons/Ionicons';
 import { Oportunities } from './home.schemma';
+
 import { isEmpty, numberFormater } from '~/generics';
+import { isOnLoading, toast } from '~/components/util/loading';
+
+import { subscribeOportunity } from './home.services';
+import { useAuth } from '~/contexts/auth';
 
 const GET_OPORTUNIDADE = gql`
   query Oportunidade($id: String) {
@@ -60,7 +66,19 @@ const renderBeneficio = (data) => {
   });
 };
 
-const HomeDetails = ({ navigation, route }) => {
+export default function HomeDetails({ navigation, route }) {
+  const { user } = useAuth();
+  const [timing, setTiming] = useState(false);
+  const [icon, setIcon] = useState('ios-add');
+  const [finaly, setFinaly] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState(false);
+
+  const onDismissSnackBar = () => {
+    setTiming(false);
+    navigation.pop();
+  };
+
   const {
     params: { itemId },
   } = route;
@@ -69,17 +87,38 @@ const HomeDetails = ({ navigation, route }) => {
   });
 
   if (loading) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <View style={styles.container}>{isOnLoading()}</View>;
   }
 
   if (error) {
     return <Text>Erro...</Text>;
   }
+
+  async function handleCandidatura() {
+    setIsLoading(true);
+    const res = await subscribeOportunity({
+      OportunidadeId: Id,
+      CandidatoId: user.PessoaId,
+    });
+
+    setIsLoading(false);
+
+    if (res.errors) {
+      setFinaly('error');
+      setMessage(res.errors[0].message);
+      setTiming(true);
+      return;
+    }
+    setFinaly('success');
+    setIcon('ios-done-all');
+    setMessage('A sua candidatura foi efeturada com successo...');
+    setTiming(true);
+
+    setTimeout(() => navigation.pop(), 2000);
+  }
+
   const {
+    Id,
     TipoEmprego,
     DataLimite,
     TipoFuncao,
@@ -100,6 +139,7 @@ const HomeDetails = ({ navigation, route }) => {
   return (
     <Modal visible={true} animationType="slide">
       <View style={styles.container}>
+        {toast(timing, message, onDismissSnackBar, finaly)}
         <ScrollView>
           <View style={styles.cardContainer}>
             <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -311,25 +351,28 @@ const HomeDetails = ({ navigation, route }) => {
           </View>
         </ScrollView>
         <FAB
-          style={styles.fab}
-          small
-          icon={() => (
-            <Icons
-              name="ios-checkmark"
-              size={32}
-              style={{ textAlign: 'center', color: '#fff' }}
-            />
-          )}
-          onPress={() => {
-            navigation.pop();
+          style={{
+            ...styles.fab,
+            backgroundColor: isLoading ? 'white' : Colores.Primary,
           }}
+          small
+          icon={() => {
+            return isLoading ? (
+              isOnLoading()
+            ) : (
+              <Icons
+                name={icon}
+                size={32}
+                style={{ textAlign: 'center', color: 'white', marginTop: -3 }}
+              />
+            );
+          }}
+          onPress={handleCandidatura}
         />
       </View>
     </Modal>
   );
-};
-
-export default HomeDetails;
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -347,8 +390,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     margin: 16,
     right: 0,
-    backgroundColor: '#8f9bfa',
-
     bottom: 0,
   },
   surface: {

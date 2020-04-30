@@ -16,7 +16,7 @@ import { useAuth } from '~/contexts/auth';
 
 const SettingsItems = ({ navigation, route }) => {
   const [checked, setchecked] = useState(true);
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   return (
     <View
       style={{
@@ -37,7 +37,7 @@ const SettingsItems = ({ navigation, route }) => {
               fontWeight: '200',
             }}
           >
-            António Lopes
+            {user.UserName}
           </Text>
           <Text
             style={{

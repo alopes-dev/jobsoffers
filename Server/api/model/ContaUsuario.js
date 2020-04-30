@@ -19,8 +19,8 @@ const ContaUsuario = db.define('ContaUsuario', {
         type: Sequelize.STRING,
         notEmpty: true,
     },
-    Role: {
-        type: Sequelize.STRING,
+    Provider: {
+        type: Sequelize.INTEGER,
         notEmpty: true,
     },
     PassWord: {

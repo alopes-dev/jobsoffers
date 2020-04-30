@@ -27,7 +27,7 @@ const Home = ({ navigation, data, ...rest }) => {
   }, []);
 
   const renderOportunities = () => {
-    const { loading, error, allOportunidades } = data;
+    const { loading, error, vagasDisponiveis } = data;
     if (loading) {
       return (
         <View
@@ -48,7 +48,7 @@ const Home = ({ navigation, data, ...rest }) => {
       );
     }
 
-    return allOportunidades.map((item, i) => {
+    return vagasDisponiveis.map((item, i) => {
       const { Designacao } = item.TipoFuncao && item.TipoFuncao;
       return (
         <OportunitiesCards
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 export default graphql(
   gql`
     query {
-      allOportunidades {
+      vagasDisponiveis {
         Id
         TipoFuncao {
           Designacao

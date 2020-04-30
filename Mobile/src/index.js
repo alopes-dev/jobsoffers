@@ -15,8 +15,9 @@ import { HttpLink } from 'apollo-link-http';
 
 import Routes from '~/routes/index';
 import { AuthProvider } from '~/contexts/auth';
+import { DEFAULT_URI } from './services/helpers';
 
-const GRAPHQL_ENDPOINT = 'http://172.16.16.222:5500/graphql';
+const GRAPHQL_ENDPOINT = DEFAULT_URI;
 // http://
 // const links = new WebSocketLink(wsLink);
 const link = new HttpLink({

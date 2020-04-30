@@ -9,6 +9,7 @@ import {
   State,
   TextInput,
 } from 'react-native-gesture-handler';
+
 const { width, height } = Dimensions.get('window');
 
 const {

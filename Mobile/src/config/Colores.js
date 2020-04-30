@@ -1,7 +1,7 @@
 /* eslint-disable eol-last */
 /* eslint-disable prettier/prettier */
 export default {
-    Primary: '#8052ae',
+    Primary: '#0186ae',
     Secondary: '#aaa',
     TextColor: '#000380',
     backgroundColor: '#f9fcff',

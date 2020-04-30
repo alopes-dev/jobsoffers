@@ -2,31 +2,37 @@ import { DEFAULT_URI, servicetypes } from './helpers';
 import { isEmpty } from '~/generics';
 
 var IService = (function () {
-  function IService(uri = DEFAULT_URI) {
+  function Service(uri = DEFAULT_URI) {
     this.uri = uri;
     this.table = '';
   }
 
-  IService.prototype.join = async function (schema, table, isMutation) {
+  Service.prototype.join = async function (schema, table, isMutation) {
     let response = await fetch(this.uri, {
       method: 'post',
       body: JSON.stringify(schema),
       headers: { 'Content-Type': 'application/json' },
     });
+
     let result = await response.json();
 
-    result.ok = response.ok;
-    if (!response.ok) {
+    if (result.errors) {
+      delete result.data;
+      result.ok = false;
       return result;
     }
+
+    result.ok = true;
+
     if (isEmpty(isMutation)) {
       result.data = result.data[table];
     }
     return result;
   };
 
-  IService.prototype.onCreateSchema = function ({
+  Service.prototype.onCreateSchema = function ({
     value,
+    useExclamation,
     getById,
     type,
     table,
@@ -45,6 +51,10 @@ var IService = (function () {
         return this.join(query, table, undefined);
 
       case servicetypes.STORE:
+        let exclamation = '';
+        if (useExclamation) {
+          exclamation = '!';
+        }
         let _Itable =
           table.charAt(0).toLowerCase() +
           table.substr(1, table.length - 1).toLowerCase();
@@ -53,30 +63,27 @@ var IService = (function () {
           table.substr(1, table.length - 1).toLowerCase();
 
         query = {
-          query: `mutation ${_Itable}Input($input: ${Itable}Input) { ${_Itable}Input(input: $input) { add${Itable}{${properties}} } }`,
+          query: `mutation ${_Itable}Input($input: ${Itable}Input${exclamation}) { add${Itable}(input: $input) {${properties} } }`,
           variables: { input: value },
         };
+
         return this.join(query, table, 'true');
       default:
         break;
     }
   };
 
-  IService.prototype.fetch = function (schema) {
+  Service.prototype.fetch = function (schema) {
     schema.type = servicetypes.FETCH;
     return this.onCreateSchema(schema);
   };
 
-  IService.prototype.store = function (schema) {
+  Service.prototype.store = function (schema) {
     schema.type = servicetypes.STORE;
     return this.onCreateSchema(schema);
   };
 
-  return IService;
+  return Service;
 })();
 
-// var test = new IService()
-
-// test.fetch()
-
-export default IService;
+export default new IService();

@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: '#7F58FF',
+    backgroundColor: '#3fb3aa',
     position: 'absolute',
     marginTop: -60,
     shadowColor: '#7F58FF',
@@ -132,6 +132,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#7F58FF',
+    backgroundColor: '#0186ae',
   },
 });

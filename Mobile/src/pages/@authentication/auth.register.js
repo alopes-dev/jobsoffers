@@ -2,21 +2,26 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, ScrollView } from 'react-native';
 
+import Input from '~/components/Fields/input';
+
 const AuthRegister = () => {
   return (
     <View style={{ marginTop: 20 }}>
       <ScrollView>
-        <TextInput
+        <Input
+          name="NomeCompleto"
           placeholder="Nome Completo"
           style={styles.textInput}
           placeholderTextColor="white"
         />
-        <TextInput
+        <Input
+          name="Email"
           placeholder="E-mail"
           style={styles.textInput}
           placeholderTextColor="white"
         />
-        <TextInput
+        <Input
+          name="Has_PassWord"
           placeholder="Palavra Passe"
           secureTextEntry
           style={styles.textInput}

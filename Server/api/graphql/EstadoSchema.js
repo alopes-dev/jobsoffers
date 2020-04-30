@@ -28,15 +28,6 @@ const EstadoInput = new GraphQLInputObjectType({
     }),
 });
 
-const EstadoPayLoad = new GraphQLObjectType({
-    name: 'EstadoPayLoad',
-    fields: () => ({
-        addEstado: {
-            type: new GraphQLList(EstadoType),
-        },
-    }),
-});
-
 const EstadoResolve = {
     allEstados: {
         type: new GraphQLList(EstadoType),
@@ -60,8 +51,8 @@ const EstadoResolve = {
 };
 
 const EstadoMutation = {
-    estadoInput: {
-        type: EstadoPayLoad,
+    addEstado: {
+        type: EstadoType,
         args: {
             input: {
                 type: EstadoInput,
@@ -69,15 +60,12 @@ const EstadoMutation = {
         },
         async resolve(parent, { input }) {
             const sysdate = new Date(Date.now());
-            const data = await Estado.create({
-                    Id: uuid(),
-                    ...input,
-                    CreatedAt: sysdate,
-                    UpdatedAt: sysdate,
-                })
-                .then((e) => e)
-                .catch((err) => err);
-            return data;
+            return await Estado.create({
+                Id: uuid(),
+                ...input,
+                CreatedAt: sysdate,
+                UpdatedAt: sysdate,
+            });
         },
     },
 

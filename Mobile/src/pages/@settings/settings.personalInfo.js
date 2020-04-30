@@ -4,8 +4,12 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Avatar } from 'react-native-paper';
 import { IconButton, Colors } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Colores from '~/config/Colores';
+
+import { useAuth } from '~/contexts/auth';
+
 const PersonalInformation = () => {
+  const { user } = useAuth();
+
   return (
     <View style={styles.container}>
       <View style={styles.coverImage}>
@@ -37,7 +41,7 @@ const PersonalInformation = () => {
           </View>
           <View style={styles.username}>
             <Text style={{ fontWeight: '600', fontSize: 15 }}>
-              António Lopes
+              {user.UserName}
             </Text>
             <View style={{ flex: 1, flexDirection: 'row', marginVertical: 3 }}>
               <Icon

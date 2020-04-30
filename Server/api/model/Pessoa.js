@@ -23,20 +23,17 @@ const Pessoa = db.define('Pessoa', {
         type: Sequelize.DATE,
         notEmpty: false,
     },
-    ContactoId: {
-        type: Sequelize.STRING(50),
-        notEmpty: false,
-    },
-    DocumentoId: {
-        type: Sequelize.STRING(50),
-        notEmpty: false,
-    },
+
     CidadeId: {
         type: Sequelize.DATE,
         notEmpty: false,
     },
     Foto: {
         type: Sequelize.STRING(50),
+        notEmpty: false,
+    },
+    IsCandidato: {
+        type: Sequelize.INTEGER,
         notEmpty: false,
     },
     EstadoId: {
