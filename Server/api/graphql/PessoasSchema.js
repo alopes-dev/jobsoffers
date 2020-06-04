@@ -16,11 +16,14 @@ const DocumentoModel = require('../model/Documento');
 const ContaUsuario = require('../model/ContaUsuario');
 const PessoaContacto = require('../model/PessoaContacto');
 const PessoaDocumento = require('../model/PessoaDocumento');
+const PessoaIdioma = require('../model/PessoaIdioma');
 
 const { EstadoType } = require('./EstadoSchema');
 const { CidadeType } = require('./CidadesSchema');
 const { ContactoType, ContactoInput } = require('./ContactosSchema');
 const { DocumentoType, DocumentoInput } = require('./DocumentosSchema');
+const { PessoaContactoType } = require('./PessoaContactoSchema');
+const { PessoaIdiomaType } = require('./PessoaIdiomaSchema ');
 
 const { CodeGenerator, isEmpty } = require('../../helpers');
 
@@ -30,9 +33,8 @@ const PessoaType = new GraphQLObjectType({
         Id: { type: GraphQLString },
         Nome: { type: GraphQLString },
         SobreNome: { type: GraphQLString },
+        Morada: { type: GraphQLString },
         DataNascimento: { type: GraphQLString },
-        Localizacao: { type: GraphQLString },
-        Foto: { type: GraphQLString },
         Status: { type: GraphQLInt },
         // DocumentoId: { type: GraphQLString },
         // Documento: {
@@ -46,22 +48,21 @@ const PessoaType = new GraphQLObjectType({
         //     },
         // },
         // ContactoId: { type: GraphQLString },
-        // Contacto: {
-        //     type: ContactoType,
-        //     resolve(prev, args) {
-        //         return Contacto.findOne({
-        //                 where: { Id: prev.ContactoId },
-        //             })
-        //             .then((e) => e)
-        //             .catch((error) => error);
-        //     },
-        // },
-        CidadeId: { type: GraphQLString },
-        Cidade: {
-            type: CidadeType,
+        PessoaContacto: {
+            type: new GraphQLList(PessoaContactoType),
             resolve(prev, args) {
-                return Cidade.findOne({
-                        where: { Id: prev.CidadeId },
+                return PessoaContacto.findAll({
+                        where: { PessoaId: prev.Id },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
+        },
+        PessoaIdiomas: {
+            type: new GraphQLList(PessoaIdiomaType),
+            resolve(prev, args) {
+                return PessoaIdioma.findAll({
+                        where: { PessoaId: prev.Id },
                     })
                     .then((e) => e)
                     .catch((error) => error);

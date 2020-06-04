@@ -18,9 +18,7 @@ const ContactoType = new GraphQLObjectType({
         Id: { type: GraphQLString },
         Status: { type: GraphQLInt },
         Telefone: { type: GraphQLString },
-        TelefoneAlternativo: { type: GraphQLString },
         Email: { type: GraphQLString },
-        EmailAlternativo: { type: GraphQLString },
         EstadoId: { type: GraphQLString },
         Estado: {
             type: EstadoType,

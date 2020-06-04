@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import routes from '../../routes';
 import { isEmpty } from '../../helpers';
 
-export default class SideBarMenu extends Component {
-  constructor(props) {
-    super(props);
+export default function SideBarMenu(props) {
+  const [userName, setUserName] = useState('');
 
-    this.state = {};
-  }
+  useEffect(() => {
+    const { UserName, Email } = JSON.parse(localStorage.getItem('@jobs:user'));
 
-  getChildren(child) {
+    setUserName(UserName);
+  });
+
+  function getChildren(child) {
     if (!isEmpty(child)) {
       return child.map((c, i) => {
         if (c.show === false) return '';
@@ -24,7 +27,7 @@ export default class SideBarMenu extends Component {
     }
   }
 
-  renderRoutes() {
+  function renderRoutes() {
     if (!isEmpty(routes)) {
       return routes.map((r, i) => {
         const { collapse, children, icon, name, path, show } = r;
@@ -43,9 +46,7 @@ export default class SideBarMenu extends Component {
                 <span className="caret"></span>
               </a>
               <div className="collapse" id={name}>
-                <ul className="nav nav-collapse">
-                  {this.getChildren(children)}
-                </ul>
+                <ul className="nav nav-collapse">{getChildren(children)}</ul>
               </div>
             </li>
           );
@@ -63,58 +64,56 @@ export default class SideBarMenu extends Component {
     }
   }
 
-  render() {
-    return (
-      <div className="sidebar sidebar-style-2" data-background-color="dark">
-        <div className="sidebar-wrapper scrollbar scrollbar-inner">
-          <div className="sidebar-content">
-            <div className="user">
-              <div className="avatar-sm float-left mr-2">
-                <img
-                  src="./img/profile.jpg"
-                  alt="..."
-                  className="avatar-img rounded-circle"
-                />
-              </div>
-              <div className="info">
-                <a
-                  data-toggle="collapse"
-                  href="#collapseExample"
-                  aria-expanded="true"
-                >
-                  <span>
-                    António Lopes
-                    <span className="user-level">Administrator</span>
-                    <span className="caret"></span>
-                  </span>
-                </a>
-                <div className="clearfix"></div>
+  return (
+    <div className="sidebar sidebar-style-2" data-background-color="dark">
+      <div className="sidebar-wrapper scrollbar scrollbar-inner">
+        <div className="sidebar-content">
+          <div className="user">
+            <div className="avatar-sm float-left mr-2">
+              <img
+                src="./img/profile.jpg"
+                alt="..."
+                className="avatar-img rounded-circle"
+              />
+            </div>
+            <div className="info">
+              <a
+                data-toggle="collapse"
+                href="#collapseExample"
+                aria-expanded="true"
+              >
+                <span>
+                  {userName}
+                  <span className="user-level">Administrator</span>
+                  <span className="caret"></span>
+                </span>
+              </a>
+              <div className="clearfix"></div>
 
-                <div className="collapse in" id="collapseExample">
-                  <ul className="nav">
-                    <li>
-                      <a href="#profile">
-                        <span className="link-collapse">My Profile</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#edit">
-                        <span className="link-collapse">Edit Profile</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#settings">
-                        <span className="link-collapse">Settings</span>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+              <div className="collapse in" id="collapseExample">
+                <ul className="nav">
+                  <li>
+                    <a href="#profile">
+                      <span className="link-collapse">Meu Perfil</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#edit">
+                      <span className="link-collapse">Editar Perfil</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#settings">
+                      <span className="link-collapse">Definições</span>
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
-            <ul className="nav nav-primary">{this.renderRoutes()}</ul>
           </div>
+          <ul className="nav nav-primary">{renderRoutes()}</ul>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }

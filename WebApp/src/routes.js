@@ -1,5 +1,6 @@
 import AddCandidato from './components/Views/Candidato/addCandidato';
 import ListCandidato from './components/Views/Candidato/listCandidato';
+import CurriculumViewer from './components/Views/Candidato/CurriculumViewer';
 import CoreOportunidade from './components/Views/Oportunidade/index';
 import Dashboard from './components/Views/Dashboard/dashboard';
 import ListOportunidade from './components/Views/Oportunidade/listOportunidade';
@@ -10,7 +11,7 @@ const routes = [{
         path: '/dashboard',
         icon: 'flaticon-home',
         layout: '/admin',
-        components: Dashboard
+        components: Dashboard,
     },
 
     {
@@ -20,13 +21,13 @@ const routes = [{
         children: [{
                 name: 'Oportunidades',
                 path: '/list-oportunidade',
-                components: ListOportunidade
+                components: ListOportunidade,
             },
             {
-                name: 'Novo Oportunidade',
+                name: 'Nova Oportunidade',
                 path: '/oportunidade',
                 components: CoreOportunidade,
-                privice: 'admin'
+                privice: 'admin',
             },
             {
                 name: 'Visão Geral da Oportunidade',
@@ -34,9 +35,9 @@ const routes = [{
                 show: false,
                 components: VOp360,
                 privice: 'admin',
-                aliasIcon: 'flaticon-layers-1'
-            }
-        ]
+                aliasIcon: 'flaticon-layers-1',
+            },
+        ],
     },
     {
         name: 'Candidato',
@@ -47,7 +48,7 @@ const routes = [{
                 path: '/list-candidato',
                 action: 'Listagem',
                 components: ListCandidato,
-                aliasIcon: 'icon-people'
+                aliasIcon: 'icon-people',
             },
             {
                 name: 'Novo Candidatos',
@@ -55,51 +56,59 @@ const routes = [{
                 components: AddCandidato,
                 action: 'Formúlario',
                 privice: 'admin',
-                aliasIcon: 'icon-user-follow'
-            }
-        ]
+                aliasIcon: 'icon-user-follow',
+            },
+            {
+                name: 'Curriculum do Candidato',
+                path: '/curriculum-viewer',
+                show: false,
+                components: CurriculumViewer,
+                privice: 'admin',
+                aliasIcon: 'flaticon-layers-1',
+            },
+        ],
     },
     {
         name: 'Candidatura',
         path: '/Candidatura',
-        icon: 'icon-tag'
+        icon: 'icon-tag',
     },
     {
         name: 'Serviços',
         path: '/servicos',
-        icon: 'flaticon-technology-1'
+        icon: 'flaticon-technology-1',
     },
     {
         name: 'Alerta de vagas',
         path: '/alertaDeVagas',
-        icon: 'flaticon-alarm-1'
+        icon: 'flaticon-alarm-1',
     },
     {
         name: 'Curriculo',
         path: '/curriculo',
-        icon: 'flaticon-shapes'
+        icon: 'flaticon-shapes',
     },
-    {
-        name: 'Procurar VC',
-        path: '/procurarVC',
-        icon: 'flaticon-search-1'
-    },
-    {
-        name: 'Beneficios',
-        path: '/Beneficios',
-        icon: 'icon-support',
-        components: AddCandidato
-    },
-    {
-        name: 'Empresa',
-        path: '/Empresa',
-        icon: 'icon-compass'
-    },
-    {
-        name: 'Cargos',
-        path: '/Cargos',
-        icon: 'icon-briefcase'
-    }
+    // {
+    //     name: 'Procurar VC',
+    //     path: '/procurarVC',
+    //     icon: 'flaticon-search-1',
+    // },
+    // {
+    //     name: 'Beneficios',
+    //     path: '/Beneficios',
+    //     icon: 'icon-support',
+    //     components: AddCandidato,
+    // },
+    // {
+    //     name: 'Empresa',
+    //     path: '/Empresa',
+    //     icon: 'icon-compass',
+    // },
+    // {
+    //     name: 'Cargos',
+    //     path: '/Cargos',
+    //     icon: 'icon-briefcase',
+    // },
 ];
 
 export default routes;

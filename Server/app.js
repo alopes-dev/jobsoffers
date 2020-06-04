@@ -35,6 +35,7 @@ var pessoasRouter = require('./api/routes/pessoa');
 var sectorDeAtividadesRouter = require('./api/routes/sectorDeAtividade');
 var tipoDetalhesRouter = require('./api/routes/tipoDetalhe');
 var tipoDocumentosRouter = require('./api/routes/tipoDocumento');
+var uploadRouter = require('./api/routes/upload');
 
 //Allow cross - Origin
 
@@ -48,7 +49,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(uploadRouter);
 app.use('/', indexRouter);
+
 const graphqlHTTP = require('express-graphql');
 const schema = require('./api/graphql/schema');
 /**

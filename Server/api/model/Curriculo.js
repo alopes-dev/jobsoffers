@@ -5,21 +5,25 @@ const Curriculo = db.define('Curriculo', {
     Id: {
         type: Sequelize.STRING(50),
         defaultValue: Sequelize.UUIDV1,
-        primaryKey: true
+        primaryKey: true,
     },
     Designacao: {
         type: Sequelize.STRING(50),
-        notEmpty: true
+        notEmpty: true,
+    },
+    ResumoProfissional: {
+        type: Sequelize.STRING,
+        notEmpty: true,
     },
     CandidatoId: {
         type: Sequelize.STRING(50),
-        notEmpty: false
+        notEmpty: false,
     },
 
     EstadoId: {
         type: Sequelize.STRING(50),
-        notEmpty: true
-    }
+        notEmpty: true,
+    },
 });
 
 module.exports = Curriculo;

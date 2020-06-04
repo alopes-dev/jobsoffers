@@ -1,14 +1,7 @@
-import React from 'react'
-import {Provider} from 'react-redux';
+import React from 'react';
+
 import AddOportunidade from './addOportunidade';
-import store from '../../../store/index'
 
- const OportunidadeCore =()=> {
-    return (
-        <Provider store={store}>
-            <AddOportunidade />
-        </Provider>
-    )
+export default function OportunidadeCore() {
+  return <AddOportunidade />;
 }
-
-export default OportunidadeCore;

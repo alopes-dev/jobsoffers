@@ -4,7 +4,7 @@ import { isEmpty } from '../../../helpers';
 export const Input = styled.input `
   padding: 0.5em;
   margin: 0.5em;
-  color: ${props => props.inputColor || 'palevioletred'};
+  color: ${(props) => props.inputColor || 'palevioletred'};
   background: papayawhip;
   border: none;
   border-radius: 3px;
@@ -43,7 +43,7 @@ export const ResponsiveTable = styled.ul `
   }
 `;
 export const TableHeader = styled.li `
-  background: rgba(88, 103, 221, 0.8);
+  background: rgb(26, 32, 53);
   font-size: 12px !important;
   color: white !important;
   font-size: 14px;
@@ -70,7 +70,7 @@ export const TableRow = styled.li `
 `;
 
 export const Col = styled.div `
-  flex-basis: ${props => ` ${getColSize(props.size)}`}!important;
+  flex-basis: ${(props) => ` ${getColSize(props.size)}`}!important;
   text-align: center;
   cursor: pointer;
   i.actions-icon {
@@ -93,7 +93,7 @@ export const Col = styled.div `
   }
 `;
 
-const getColSize = size => {
+const getColSize = (size) => {
   if (!isEmpty(size)) return '100%';
   if (size === 1) return '10%';
   if (size === 2) return '40%';

@@ -4,51 +4,55 @@ import {
   ResponsiveTable,
   Container,
   TableHeader,
-  TableRow
+  TableRow,
 } from './style';
+import { Animated } from 'react-animated-css';
 import CardIIustrated from '../tables/cardIIustrated';
 import { isEmpty } from '../../../helpers';
 
 export default function Index({ values, ilustrate, options, ...rest }) {
-  const thead = data => {
-    return Object.keys(data).map(d => {
-      return <Col> {data[d].preview} </Col>;
+  const thead = (data) => {
+    return Object.keys(data).map((d, i) => {
+      return <Col key={i}> {data[d].preview} </Col>;
     });
   };
 
   const tbody = (values, options) => {
     if (isEmpty(values)) return noContentFound();
-    return values.map(v => {
+    return values.map((v, i) => {
       return (
-        <TableRow>
-          {Object.keys(options).map(op => {
-            return (
-              <Col
+        <Animated animationIn="fadeInLeft" animationInDelay={600 * i} key={i}>
+          <TableRow>
+            {Object.keys(options).map((op, i) => {
+              return (
+                <Col
+                  key={i}
+                  onClick={() => {
+                    rest.onItemClick(v);
+                  }}
+                  data-label={op}
+                >
+                  {v[op]}
+                </Col>
+              );
+            })}
+            <Col size={3}>
+              <i className="flaticon-file-1 actions-icon"></i>
+              <i
+                className="flaticon-pen actions-icon"
                 onClick={() => {
-                  rest.onItemClick(v);
+                  rest.editLine(v);
                 }}
-                data-label={op}
-              >
-                {v[op]}
-              </Col>
-            );
-          })}
-          <Col size={3}>
-            <i className="flaticon-file-1 actions-icon"></i>
-            <i
-              className="flaticon-pen actions-icon"
-              onClick={() => {
-                rest.editLine(v);
-              }}
-            ></i>
-            <i
-              className=" flaticon-interface-5 actions-icon"
-              onClick={() => {
-                rest.removeLine(v);
-              }}
-            ></i>
-          </Col>
-        </TableRow>
+              ></i>
+              <i
+                className=" flaticon-interface-5 actions-icon"
+                onClick={() => {
+                  rest.removeLine(v);
+                }}
+              ></i>
+            </Col>
+          </TableRow>
+        </Animated>
       );
     });
   };

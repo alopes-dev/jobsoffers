@@ -36,12 +36,12 @@
     "react/jsx-one-expression-per-line": "off",
     // "react-native/no-color-literals": "off",
     "react-native/sort-styles": "off",
+    "react-native/no-inline-styles": "off",
     // "react-native/no-inline-styles": "true",
     "global-require": "off",
     "array-bracket-newline": "off",
     "react-native/no-unused-styles": 2,
     "react-native/split-platform-components": 2,
-    "react-native/no-inline-styles": 0,
     "react-native/no-color-literals": 2,
     "react-native/no-raw-text": 2,
     "react-native/no-single-element-style-arrays": 2

@@ -11,11 +11,11 @@ const Pessoa = db.define('Pessoa', {
         type: Sequelize.STRING(50),
         notEmpty: true,
     },
-    Localizacao: {
-        type: Sequelize.STRING(50),
-        notEmpty: true,
-    },
     SobreNome: {
+        type: Sequelize.STRING(50),
+        notEmpty: false,
+    },
+    Morada: {
         type: Sequelize.STRING(50),
         notEmpty: false,
     },
@@ -24,14 +24,6 @@ const Pessoa = db.define('Pessoa', {
         notEmpty: false,
     },
 
-    CidadeId: {
-        type: Sequelize.DATE,
-        notEmpty: false,
-    },
-    Foto: {
-        type: Sequelize.STRING(50),
-        notEmpty: false,
-    },
     IsCandidato: {
         type: Sequelize.INTEGER,
         notEmpty: false,

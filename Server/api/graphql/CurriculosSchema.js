@@ -1,17 +1,16 @@
-const {
-    GraphQLObjectType,
-    GraphQLInt,
-    GraphQLString,
-    GraphQLSchema,
-    GraphQLList,
-    GraphQLID
-} = require('graphql');
-const Curriculo = require('../model/Curriculo')
+const { GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql');
+const Curriculo = require('../model/Curriculo');
 const Estado = require('../model/Estado');
-const Candidato = require('../model/Candidato');
+const Pessoa = require('../model/Pessoa');
+const CurriculoHobes = require('../model/CurriculoHobes');
+const CurriculoSkills = require('../model/CurriculoSkills');
+const CurriculoDetalhe = require('../model/CurriculoDetalhe');
 
 const { EstadoType } = require('./EstadoSchema');
-const { CandidatoType } = require('./CandidatosSchema');
+const { PessoaType } = require('./PessoasSchema');
+const { CurriculoHobesType } = require('./CurriculoHobesSchema');
+const { CurriculoSkillsType } = require('./CurriculoSkillsSchema');
+const { CurriculoDetalheType } = require('./CurriculoDetalhesSchema');
 
 const CurriculoType = new GraphQLObjectType({
     name: 'CurriculoObject',
@@ -20,49 +19,86 @@ const CurriculoType = new GraphQLObjectType({
         Designacao: { type: GraphQLString },
         Status: { type: GraphQLString },
         CandidatoId: { type: GraphQLString },
+        ResumoProfissional: { type: GraphQLString },
         Candidato: {
-            type: CandidatoType,
-            resolve(prev, args) {
-                return Candidato.findOne({
-                    where: { Id: prev.CandidatoId }
-                }).then(e => e).catch(error => error)
-            }
+            type: PessoaType,
+            resolve(prev, _) {
+                return Pessoa.findOne({
+                        where: { Id: prev.CandidatoId },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
         },
         EstadoId: { type: GraphQLString },
         Estado: {
             type: EstadoType,
-            resolve(prev, args) {
+            resolve(prev, _) {
                 return Estado.findOne({
-                    where: { Id: prev.EstadoId }
-                }).then(e => e).catch(error => error)
-            } //934857685
+                        where: { Id: prev.EstadoId },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
+        },
+        CurriculoSkills: {
+            type: new GraphQLList(CurriculoSkillsType),
+            resolve(prev, _) {
+                return CurriculoSkills.findAll({
+                        where: { CurriculoId: prev.Id },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
+        },
+        CurriculoDetalhes: {
+            type: new GraphQLList(CurriculoDetalheType),
+            resolve(prev, _) {
+                return CurriculoDetalhe.findAll({
+                        where: { CurriculoId: prev.Id },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
+        },
+        CurriculoHobes: {
+            type: new GraphQLList(CurriculoHobesType),
+            resolve(prev, _) {
+                return CurriculoHobes.findAll({
+                        where: { CurriculoId: prev.Id },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
         },
         createdAt: { type: GraphQLString },
         updatedAt: { type: GraphQLString },
-    })
-})
+    }),
+});
 
 const CurriculoResolve = {
     Curriculos: {
         type: new GraphQLList(CurriculoType),
-        resolve(parent, args) {
+        resolve(__, _) {
             return Curriculo.findAll()
-                .then(e => e)
-                .catch(error => error)
-        }
+                .then((e) => e)
+                .catch((error) => error);
+        },
     },
     Curriculo: {
         type: CurriculoType,
-        args: { Id: { type: GraphQLString } },
-        resolve(parent, args) {
+        args: { Id: { type: GraphQLString }, Consts: { type: GraphQLString } },
+        resolve(__, args) {
+            console.log(args);
             return Curriculo.findOne({
-                    where: { Id: args.Id }
+                    where: {
+                        [args.Consts]: args.Id,
+                    },
                 })
-                .then(e => e)
-                .catch(error => error)
-        }
-    }
-}
-
+                .then((e) => e)
+                .catch((error) => error);
+        },
+    },
+};
 
 module.exports = { CurriculoResolve, CurriculoType };

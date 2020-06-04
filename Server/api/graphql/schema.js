@@ -2,6 +2,7 @@ const { GraphQLObjectType, GraphQLSchema } = require('graphql');
 
 // Resolve Imported
 const { SettionMutation } = require('./Session');
+const { SkillsResolve } = require('./SkillsSchema');
 const { HobesResolve } = require('./HobesSchema');
 const { CargoResolve } = require('./CargosSchema');
 const { CidadeResolve } = require('./CidadesSchema');
@@ -17,27 +18,32 @@ const { PessoaContactoResolve } = require('./PessoaContactoSchema');
 const { PessoaResolve, PessoaMutation } = require('./PessoasSchema');
 const { PessoaDocumentoResolve } = require('./PessoaDocumentoSchema');
 const {
-    TipoEmpregoResolve,
-    TipoEmpregoMutation,
+  SolicitacaoDocumentoResolve,
+  SolicitacaoDocumentoMutation,
+} = require('./SolicitacaoDocumentos');
+const {
+  TipoEmpregoResolve,
+  TipoEmpregoMutation,
 } = require('./TipoEmpregoSchema');
 const {
-    CandidaturaResolve,
-    CandidaturaMutation,
+  CandidaturaResolve,
+  CandidaturaMutation,
 } = require('./CandidaturasSchema');
 const { TipoDetalheResolve } = require('./TipoDetalhesSchema');
 const {
-    TipoFormacaoResolve,
-    TipoFormacaoMutation,
+  TipoFormacaoResolve,
+  TipoFormacaoMutation,
 } = require('./TipoFormacaoSchema');
 const { ContaUsuarioResolve } = require('./ContaUsuariosSchema');
 const { TipoDocumentoResolve } = require('./TipoDocumentosSchema');
 const { CurriculoHobesResolve } = require('./CurriculoHobesSchema');
+const { CurriculoSkillsResolve } = require('./CurriculoSkillsSchema');
 const { EstadoResolve, EstadoMutation } = require('./EstadoSchema');
 const { CurriculoDetalheResolve } = require('./CurriculoDetalhesSchema');
 const { SectorDeAtividadeResolve } = require('./SectorDeAtividadesSchema');
 const { CompetenciaResolve } = require('./CompetenciasSchema');
 const {
-    OportunidadeCompetenciaResolve,
+  OportunidadeCompetenciaResolve,
 } = require('./OportunidadeCompetenciaSchema');
 const { TipoFuncaoResolve } = require('./TipoFuncaosSchema');
 const { ProvinciaResolve } = require('./ProvinciasSchema');
@@ -45,70 +51,76 @@ const { NacionalidadeResolve } = require('./NacionalidadesSchema');
 const { IdiomaResolve } = require('./IdiomasSchema');
 const { AreaResolve } = require('./AreasSchema');
 const { OportunidadeIIdiomaResolve } = require('./OportunidadeIIdiomaSchema');
+const { PessoaIdiomaResolve } = require('./PessoaIdiomaSchema ');
 const {
-    AvaliacaoCurriculoResolve,
-    AvaliacaoCurriculoMutation,
+  AvaliacaoCurriculoResolve,
+  AvaliacaoCurriculoMutation,
 } = require('./AvaliacaoCurriculosSchema');
 const {
-    OportunidadeResolve,
-    OportunidadeMutation,
+  OportunidadeResolve,
+  OportunidadeMutation,
 } = require('./oportunidade/joined');
 
 const RootQuery = new GraphQLObjectType({
-    name: 'Query',
-    fields: {
-        ...CargoResolve,
-        ...HobesResolve,
-        ...CidadeResolve,
-        ...AreaResolve,
-        ...EstadoResolve,
-        ...PessoaResolve,
-        ...IdiomaResolve,
-        ...DetalheResolve,
-        ...EmpresaResolve,
-        ...ContactoResolve,
-        ...ProvinciaResolve,
-        ...BeneficioResolve,
-        ...DocumentoResolve,
-        ...CandidatoResolve,
-        ...CurriculoResolve,
-        ...TipoFuncaoResolve,
-        ...EmpregadorResolve,
-        ...CandidaturaResolve,
-        ...TipoEmpregoResolve,
-        ...CompetenciaResolve,
-        ...TipoDetalheResolve,
-        ...OportunidadeResolve,
-        ...ContaUsuarioResolve,
-        ...TipoFormacaoResolve,
-        ...TipoDocumentoResolve,
-        ...NacionalidadeResolve,
-        ...PessoaContactoResolve,
-        ...CurriculoHobesResolve,
-        ...PessoaDocumentoResolve,
-        ...CurriculoDetalheResolve,
-        ...SectorDeAtividadeResolve,
-        ...AvaliacaoCurriculoResolve,
-        ...OportunidadeIIdiomaResolve,
-        ...OportunidadeCompetenciaResolve,
-    },
+  name: 'Query',
+  fields: {
+    ...CargoResolve,
+    ...HobesResolve,
+    ...SkillsResolve,
+    ...CidadeResolve,
+    ...AreaResolve,
+    ...EstadoResolve,
+    ...PessoaResolve,
+    ...IdiomaResolve,
+    ...DetalheResolve,
+    ...EmpresaResolve,
+    ...ContactoResolve,
+    ...ProvinciaResolve,
+    ...BeneficioResolve,
+    ...DocumentoResolve,
+    ...CandidatoResolve,
+    ...CurriculoResolve,
+    ...TipoFuncaoResolve,
+    ...EmpregadorResolve,
+    ...CandidaturaResolve,
+    ...TipoEmpregoResolve,
+    ...CompetenciaResolve,
+    ...TipoDetalheResolve,
+    ...OportunidadeResolve,
+    ...ContaUsuarioResolve,
+    ...PessoaIdiomaResolve,
+    ...TipoFormacaoResolve,
+    ...TipoDocumentoResolve,
+    ...NacionalidadeResolve,
+    ...PessoaContactoResolve,
+    ...CurriculoHobesResolve,
+    ...CurriculoSkillsResolve,
+    ...PessoaDocumentoResolve,
+    ...CurriculoDetalheResolve,
+    ...SectorDeAtividadeResolve,
+    ...AvaliacaoCurriculoResolve,
+    ...OportunidadeIIdiomaResolve,
+    ...SolicitacaoDocumentoResolve,
+    ...OportunidadeCompetenciaResolve,
+  },
 });
 
 const RootMutation = new GraphQLObjectType({
-    name: 'Mutaion',
-    fields: {
-        ...EstadoMutation,
-        ...PessoaMutation,
-        ...SettionMutation,
-        ...CandidaturaMutation,
-        ...OportunidadeMutation,
-        // ...AvaliacaoCurriculoMutation,
-        // ...TipoEmpregoMutation,
-        // ...TipoFormacaoMutation,
-    },
+  name: 'Mutaion',
+  fields: {
+    ...EstadoMutation,
+    ...PessoaMutation,
+    ...SettionMutation,
+    ...CandidaturaMutation,
+    ...OportunidadeMutation,
+    ...SolicitacaoDocumentoMutation,
+    // ...AvaliacaoCurriculoMutation,
+    // ...TipoEmpregoMutation,
+    // ...TipoFormacaoMutation,
+  },
 });
 
 module.exports = new GraphQLSchema({
-    query: RootQuery,
-    mutation: RootMutation,
+  query: RootQuery,
+  mutation: RootMutation,
 });

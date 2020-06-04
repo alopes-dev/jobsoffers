@@ -4,9 +4,9 @@ const {
     GraphQLString,
     GraphQLSchema,
     GraphQLList,
-    GraphQLID
+    GraphQLID,
 } = require('graphql');
-const CurriculoDetalhe = require('../model/CurriculoDetalhe')
+const CurriculoDetalhe = require('../model/CurriculoDetalhe');
 const Estado = require('../model/Estado');
 const Curriculo = require('../model/Curriculo');
 const Detalhe = require('../model/Detalhe');
@@ -21,59 +21,56 @@ const CurriculoDetalheType = new GraphQLObjectType({
         Id: { type: GraphQLString },
         Status: { type: GraphQLString },
         CurriculoId: { type: GraphQLString },
-        Curriculo: {
-            type: CurriculoType,
-            resolve(prev, args) {
-                return Curriculo.findOne({
-                    where: { Id: prev.CurriculoId }
-                }).then(e => e).catch(error => error)
-            }
-        },
+
         DetalheId: { type: GraphQLString },
         Detalhe: {
             type: DetalheType,
             resolve(prev, args) {
                 return Detalhe.findOne({
-                    where: { Id: prev.DetalheId }
-                }).then(e => e).catch(error => error)
-            }
+                        where: { Id: prev.DetalheId },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
         },
         EstadoId: { type: GraphQLString },
         Estado: {
             type: EstadoType,
             resolve(prev, args) {
-                return Estado.findOne({ // 928762963
-                    where: { Id: prev.EstadoId }
-                }).then(e => e).catch(error => error)
-            }
+                return Estado.findOne({
+                        // 928762963
+                        where: { Id: prev.EstadoId },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
         },
         createdAt: { type: GraphQLString },
         updatedAt: { type: GraphQLString },
-    })
-})
+    }),
+});
 
 const CurriculoDetalheResolve = {
     CurriculoDetalhes: {
         type: new GraphQLList(CurriculoDetalheType),
         resolve(parent, args) {
             return CurriculoDetalhe.findAll()
-                .then(e => e)
-                .catch(error => error)
-        }
+                .then((e) => e)
+                .catch((error) => error);
+        },
     },
     CurriculoDetalhe: {
         type: CurriculoDetalheType,
         args: { Id: { type: GraphQLString } },
         resolve(parent, args) {
-            console.log(args)
+            console.log(args);
             return CurriculoDetalhe.findOne({
-                    where: { Id: args.Id }
+                    where: { Id: args.Id },
                 })
-                .then(e => e)
-                .catch(error => error)
-        }
-    }
-}
-
+                .then((e) => e)
+                .catch((error) => error);
+        },
+    },
+};
 
 module.exports = { CurriculoDetalheResolve, CurriculoDetalheType };

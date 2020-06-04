@@ -11,6 +11,7 @@ const uuid = require('uuid/v4');
 const Estado = require('../model/Estado');
 const Pessoa = require('../model/Pessoa');
 const Candidatura = require('../model/Candidatura');
+const ContaUsuario = require('../model/ContaUsuario');
 const Oportunidade = require('../model/Oportunidade');
 
 const { EstadoType } = require('./EstadoSchema');
@@ -80,18 +81,19 @@ const CandidaturaInput = new GraphQLInputObjectType({
 const CandidaturaResolve = {
     Candidaturas: {
         type: new GraphQLList(CandidaturaType),
-        resolve(__, _) {
-            return Candidatura.findAll()
-                .then((e) => e)
-                .catch((error) => error);
+        async resolve(__, _) {
+            return await Candidatura.findAll();
         },
     },
     Candidatura: {
-        type: CandidaturaType,
-        args: { Id: { type: GraphQLString } },
+        type: new GraphQLList(CandidaturaType),
+        args: { Id: { type: GraphQLString }, Consts: { type: GraphQLString } },
         resolve(_, args) {
-            return Candidatura.findOne({
-                    where: { Id: args.Id },
+            return Candidatura.findAll({
+                    where: {
+                        [args.Consts]: args.Id,
+                        IsAnalizado: 0,
+                    },
                 })
                 .then((e) => e)
                 .catch((error) => error);
@@ -141,21 +143,37 @@ const CandidaturaMutation = {
         },
     },
 
-    // updateEstado: {
-    //     type: EstadoType,
-    //     args: {
-    //         Id: { type: new GraphQLNonNull(GraphQLString) },
-    //         Designacao: { type: new GraphQLNonNull(GraphQLString) },
-    //     },
-    //     resolve(parent, args) {
-    //         return Estado.update({
-    //                 Designacao: args.Designacao,
-    //                 UpdatedAt: new Date().toJSON(),
-    //             }, { where: { Id: args.Id } })
-    //             .then((e) => args)
-    //             .catch((err) => err);
-    //     },
-    // },
+    updateCandidatura: {
+        type: CandidaturaType,
+        args: {
+            input: {
+                type: CandidaturaInput,
+            },
+        },
+        async resolve(_, { input }) {
+            const { Id, CandidatoId } = input;
+
+            const candidaturaExist = await Candidatura.findOne({ where: { Id } });
+
+            if (!candidaturaExist) throw new Error('Candidatura Inválida');
+
+            const { dataValues } = candidaturaExist;
+
+            if (dataValues.CandidatoId != CandidatoId)
+                throw new Error('O Candidato não existe');
+
+            const updateAt = new Date().toJSON();
+
+            let response = await Candidatura.update({
+                ...input,
+                UpdatedAt: updateAt,
+            }, { where: { Id } });
+
+            response = {...dataValues, ...input, UpdatedAt: updateAt };
+
+            return response;
+        },
+    },
     // deleteEstado: {
     //     type: EstadoType,
     //     args: {
