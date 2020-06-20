@@ -4,8 +4,9 @@ const {
     GraphQLString,
     GraphQLSchema,
     GraphQLList,
-    GraphQLID,
+    GraphQLInputObjectType,
 } = require('graphql');
+const uuid = require('uuid/v4');
 const PessoaIdioma = require('../model/PessoaIdioma');
 const Estado = require('../model/Estado');
 const Idioma = require('../model/Idioma');
@@ -67,7 +68,63 @@ const PessoaIdiomaResolve = {
     },
 };
 
+const PessoaidiomasInput = new GraphQLInputObjectType({
+    name: 'PessoaidiomasInput',
+    fields: () => ({
+        Id: { type: GraphQLString },
+
+        Percentagem: { type: GraphQLString },
+        IdiomaId: { type: GraphQLString },
+        PessoaId: { type: GraphQLString },
+        createdAt: { type: GraphQLString },
+        updatedAt: { type: GraphQLString },
+    }),
+});
+
+const PessoaIdiomasMutation = {
+    addPessoaidiomas: {
+        type: PessoaIdiomaType,
+        args: {
+            input: {
+                type: PessoaidiomasInput,
+            },
+        },
+        async resolve(_, { input: { PessoaId, IdiomaId, Percentagem } }) {
+            const sequelize = require('../database/dbSetting');
+            const t = await sequelize.transaction();
+
+            try {
+                const sysdate = new Date(Date.now());
+
+                const idiomas = await PessoaIdioma.findAll({ where: { PessoaId } });
+
+                idiomas.forEach((idioma) => {
+                    if (idioma.IdiomaId === IdiomaId) {
+                        throw new Error('Idioma já selecionado...');
+                    }
+                });
+
+                const pessoaIdioma = await PessoaIdioma.create({
+                    Id: uuid(),
+                    Percentagem,
+                    PessoaId,
+                    IdiomaId,
+                    CreatedAt: sysdate,
+                    UpdatedAt: sysdate,
+                }, { transaction: t });
+
+                await t.commit();
+                return pessoaIdioma;
+            } catch (error) {
+                await t.rollback();
+                throw new Error(error.message);
+            }
+        },
+    },
+};
+
 module.exports = {
     PessoaIdiomaResolve,
     PessoaIdiomaType,
+    PessoaIdiomasMutation,
 };

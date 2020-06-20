@@ -2,11 +2,16 @@ const {
     GraphQLObjectType,
     GraphQLInt,
     GraphQLString,
-    GraphQLSchema,
+    GraphQLNonNull,
     GraphQLList,
     GraphQLID,
+    GraphQLInputObjectType,
 } = require('graphql');
+
+const uuid = require('uuid/v4');
+
 const Detalhe = require('../model/Detalhe');
+const CurriculoDetalhe = require('../model/CurriculoDetalhe');
 const Estado = require('../model/Estado');
 const TipoDetalhe = require('../model/TipoDetalhe');
 const { EstadoType } = require('./EstadoSchema');
@@ -50,6 +55,25 @@ const DetalheType = new GraphQLObjectType({
     }),
 });
 
+const DetalheInput = new GraphQLInputObjectType({
+    name: 'DetalheInput',
+    fields: () => ({
+        Id: { type: GraphQLString },
+        Designacao: { type: GraphQLString },
+        NomeDaInstituicao: { type: GraphQLString },
+        DescricaoDaInstituicao: { type: GraphQLString },
+        LocalDaInstituicao: { type: GraphQLString },
+        DataInicio: { type: GraphQLString },
+        DataFim: { type: GraphQLString },
+        Status: { type: GraphQLString },
+        EstadoId: { type: GraphQLString },
+        CurriculoId: { type: GraphQLString },
+        TipoDetalheId: { type: GraphQLString },
+        createdAt: { type: GraphQLString },
+        updatedAt: { type: GraphQLString },
+    }),
+});
+
 const DetalheResolve = {
     Detalhes: {
         type: new GraphQLList(DetalheType),
@@ -73,4 +97,49 @@ const DetalheResolve = {
     },
 };
 
-module.exports = { DetalheResolve, DetalheType };
+const DetalheMutation = {
+    addDetalhe: {
+        type: DetalheType,
+        args: {
+            input: {
+                type: DetalheInput,
+            },
+        },
+        async resolve(_, { input: { CurriculoId, ...rest } }) {
+            const sequelize = require('../database/dbSetting');
+            const t = await sequelize.transaction();
+
+            try {
+                const sysdate = new Date(Date.now());
+                console.log(rest);
+                const detalhe = await Detalhe.create({
+                    Id: uuid(),
+                    ...rest,
+                    CreatedAt: sysdate,
+                    UpdatedAt: sysdate,
+                }, { transaction: t });
+
+                if (!detalhe) throw new Error('Error');
+
+                console.log(detalhe.dataValues);
+                const { Id } = detalhe.dataValues;
+                console.log(CurriculoId, Id);
+                await CurriculoDetalhe.create({
+                    Id: uuid(),
+                    CurriculoId,
+                    DetalheId: Id,
+                    CreatedAt: sysdate,
+                    UpdatedAt: sysdate,
+                }, { transaction: t });
+
+                await t.commit();
+                return detalhe;
+            } catch (error) {
+                await t.rollback();
+                throw new Error(error.message);
+            }
+        },
+    },
+};
+
+module.exports = { DetalheResolve, DetalheType, DetalheMutation };

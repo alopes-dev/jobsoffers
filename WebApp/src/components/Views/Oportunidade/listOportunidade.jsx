@@ -20,6 +20,7 @@ export default function ListOportunidade() {
 
   useEffect(() => {
     ListOportunidadeFetch().then(({ data }) => {
+      console.log(data);
       setValues(data);
     });
   }, []);

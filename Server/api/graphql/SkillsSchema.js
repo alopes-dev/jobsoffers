@@ -4,9 +4,11 @@ const {
     GraphQLString,
     GraphQLSchema,
     GraphQLList,
-    GraphQLID,
+    GraphQLInputObjectType,
 } = require('graphql');
+const uuid = require('uuid/v4');
 const Skills = require('../model/Skills');
+const CurriculoSkills = require('../model/CurriculoSkills');
 const Estado = require('../model/Estado');
 const { EstadoType } = require('./EstadoSchema');
 
@@ -57,4 +59,62 @@ const SkillsResolve = {
     },
 };
 
-module.exports = { SkillsResolve, SkillsType };
+const SkillsInput = new GraphQLInputObjectType({
+    name: 'SkillsInput',
+    fields: () => ({
+        Id: { type: GraphQLString },
+        Designacao: { type: GraphQLString },
+        Descricao: { type: GraphQLString },
+        Percentagem: { type: GraphQLString },
+        CurriculoId: { type: GraphQLString },
+        createdAt: { type: GraphQLString },
+        updatedAt: { type: GraphQLString },
+    }),
+});
+
+const SkillsMutation = {
+    addSkills: {
+        type: SkillsType,
+        args: {
+            input: {
+                type: SkillsInput,
+            },
+        },
+        async resolve(_, { input: { CurriculoId, ...rest } }) {
+            const sequelize = require('../database/dbSetting');
+            const t = await sequelize.transaction();
+
+            try {
+                const sysdate = new Date(Date.now());
+
+                const skills = await Skills.create({
+                    Id: uuid(),
+                    ...rest,
+                    CreatedAt: sysdate,
+                    UpdatedAt: sysdate,
+                }, { transaction: t });
+
+                if (!skills) throw new Error('Error');
+
+                console.log(skills.dataValues);
+                const { Id } = skills.dataValues;
+                console.log(CurriculoId, Id);
+                await CurriculoSkills.create({
+                    Id: uuid(),
+                    CurriculoId,
+                    SkillsId: Id,
+                    CreatedAt: sysdate,
+                    UpdatedAt: sysdate,
+                }, { transaction: t });
+
+                await t.commit();
+                return skills;
+            } catch (error) {
+                await t.rollback();
+                throw new Error(error.message);
+            }
+        },
+    },
+};
+
+module.exports = { SkillsResolve, SkillsType, SkillsMutation };

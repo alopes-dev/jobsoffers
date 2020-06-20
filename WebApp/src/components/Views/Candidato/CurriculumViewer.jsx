@@ -148,7 +148,7 @@ export default function CurriculumViewer(props) {
 
     if (CurriculoDetalhes) {
       const _ = CurriculoDetalhes?.forEach(({ Detalhe }) => {
-        const { Designacao, tipoIcon } = Detalhe.TipoDetalhe;
+        const { Designacao, tipoIcon } = Detalhe?.TipoDetalhe;
         if (Designacao === 'Experiência Profissional') {
           Collection.experience.values.push(Detalhe);
           Collection.experience.tipoIcon = tipoIcon;
