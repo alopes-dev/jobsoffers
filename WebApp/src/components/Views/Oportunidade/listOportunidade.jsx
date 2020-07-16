@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Index from '../../ResusibleComponents/@tables';
-import { ListOportunidadeFetch } from '../../../store/funcs/fetch';
+import {
+  ListOportunidadeFetch,
+  removeOportunidade,
+} from '../../../store/funcs/fetch';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { setOportunidadeId } from '../../../store/actions/oportunidade';
 
 import history from '../../../history';
+import { Card, CardBody, Row, Col, Button } from 'reactstrap';
+import Field from '../../ResusibleComponents/Fields/Field';
+import { Form } from '@unform/core';
+import { useRef } from 'react';
+
+import iService from '../../../services/service';
+
+import { toast } from 'react-toastify';
 
 const data = [
   { icon: 'flaticon-coins text-success', name: 'Rendimento', value: '1,982' },
@@ -16,11 +27,14 @@ const data = [
 
 export default function ListOportunidade() {
   const [values, setValues] = useState([]);
+  const [tipoFuncao, setTipoFuncao] = useState([]);
+  const [experiencia, setExperiencia] = useState([]);
   const dispatch = useDispatch();
+
+  const searchFormRef = useRef(null);
 
   useEffect(() => {
     ListOportunidadeFetch().then(({ data }) => {
-      console.log(data);
       setValues(data);
     });
   }, []);
@@ -31,9 +45,114 @@ export default function ListOportunidade() {
     history.push('/general-view');
   }
 
+  async function handleRemoveItem(oportunidadeId) {
+    const response = await removeOportunidade(oportunidadeId);
+    console.log(response, 'response');
+  }
+
+  function loadFilterData() {
+    /** fetch and set TipoEmpregos */
+    iService
+      .fetch({ table: 'Competencias', properties: 'Id Designacao' })
+      .then(async (res) => {
+        if (!res.ok) return console.error(res.errors);
+        // let data = setSelectOp(res.data, { value: 'Id', label: 'Designacao' });
+        // setValue(data, 'Idiomas');
+        console.log(res);
+      })
+      .catch((error) => console.log(error));
+  }
+
+  useEffect(() => {
+    loadFilterData();
+  });
+
+  function handleSubmit(data, { reset }) {
+    console.log(data, reset);
+
+    Object.keys(data).map((key) => {
+      if (data[key] === '') delete data[key];
+      return key;
+    });
+
+    console.log(data);
+  }
+
+  function handleClick() {
+    searchFormRef.current.submitForm();
+  }
+
+  function filterComponent() {
+    return (
+      <Form ref={searchFormRef} onSubmit={handleSubmit}>
+        <Row className="mt--4">
+          <Col xl="2  pr-0">
+            <Field
+              type="text"
+              fieldtype="select"
+              name="tipoFilter"
+              options={[{ value: 'a', label: 'Antonio' }]}
+              onChange={(event) => {
+                console.log(event.value);
+              }}
+            />
+          </Col>
+          <Col xl="3  pr-0">
+            <Field
+              type="text"
+              fieldtype="input"
+              name="value"
+              placeholder="António"
+              onChange={(event) => {
+                console.log(event.target.value);
+              }}
+            />
+          </Col>
+          <Col xl="2  pr-0">
+            <Field
+              type="date"
+              fieldtype="input"
+              name="dataInicio"
+              placeholder="António"
+              onChange={(event) => {
+                console.log(event.target.value);
+              }}
+            />
+          </Col>
+          <Col xl="3  pr-0">
+            <Field
+              type="text"
+              fieldtype="select"
+              name="tipoFuncao"
+              options={[{ value: 'a', label: 'Antonio' }]}
+              onChange={(event) => {
+                console.log(event.value);
+              }}
+            />
+          </Col>
+          <Col
+            xl="1 pl-0 pr-0"
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              display: 'flex',
+              padding: '0',
+              marginTop: '13px',
+            }}
+          >
+            <Button onClick={handleClick} className="btn-default-color">
+              Buscar
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
+
   return (
     <div>
       <Index
+        filters={filterComponent}
         ilustrate={{ data }}
         values={values}
         options={{
@@ -64,7 +183,7 @@ export default function ListOportunidade() {
         }}
         onItemClick={handleItemClick}
         removeLine={(e) => {
-          console.log(e);
+          handleRemoveItem(e.Id);
         }}
         editLine={(e) => {
           console.log(e);

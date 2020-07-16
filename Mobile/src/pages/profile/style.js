@@ -139,3 +139,83 @@ export const Button = styled(RectButton)`
 export const InputDisabledText = styled.Text`
   color: #333;
 `;
+
+export const SectionContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  background-color: white;
+  padding: 20px;
+`;
+export const Section = styled.View`
+  background: #eee;
+  border-radius: 4px;
+  width: 100%;
+  padding: 4px;
+  margin: 6px 0;
+`;
+
+export const SectionHeader = styled.View`
+  height: 40px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+export const SectionIcon = styled.View`
+  margin-left: 5px;
+  /* background: grey; */
+  height: 30px;
+  width: 30px;
+  border-radius: 4px;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const SectionText = styled.Text`
+  margin-left: 5px;
+  font-size: 19px;
+`;
+
+export const SectionBody = styled.View`
+  flex-direction: column;
+  justify-content: center;
+`;
+
+export const ListItem = styled.View`
+  padding: 5px 35px 5px 40px;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+export const ListText = styled.Text`
+  font-size: 13px;
+`;
+export const Username = styled.Text`
+  font-size: 17px;
+  font-weight: bold;
+`;
+export const UserJobs = styled.Text`
+  font-size: 13px;
+  font-weight: bold;
+  margin-left: 20px;
+`;
+
+export const ListTextPercentage = styled.Text`
+  font-size: 12px;
+  color: green;
+`;
+
+export const DetailsItem = styled.View``;
+
+export const DetailTitle = styled.Text`
+  font-size: 15px;
+`;
+export const DetailDesignacao = styled.Text`
+  font-size: 12px;
+  margin-left: 14px;
+  font-weight: bold;
+`;
+export const DetailTime = styled.Text`
+  font-size: 12px;
+  margin-left: 14px;
+  margin-top: 5px;
+  color: green;
+`;

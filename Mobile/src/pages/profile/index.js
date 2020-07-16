@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   Dimensions,
@@ -33,10 +33,48 @@ import {
 } from './style';
 import Colores from '~/config/Colores';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-
+import AsyncStorage from '@react-native-community/async-storage';
 const { width } = Dimensions.get('window');
 
+import api from '~/services/service';
+
 export default function Profile({ navigation }) {
+  const [userTitle, setUserTitle] = useState('');
+  const [userName, setUserName] = useState('');
+
+  async function loadInfos() {
+    const storageUser = await AsyncStorage.getItem('@jobs:user');
+    const { PessoaId } = JSON.parse(storageUser);
+
+    api
+      .fetch({
+        getById: {
+          consts: 'CandidatoId',
+          field: 'Id',
+          value: PessoaId,
+        },
+        table: 'Curriculo',
+        properties: `
+        Designacao
+        Candidato {
+          Nome
+          SobreNome
+        }`,
+      })
+      .then((curriclo) => {
+        if (curriclo.errors) {
+          return;
+        }
+        const { Candidato, Designacao } = curriclo.data;
+
+        setUserName(`${Candidato.Nome} ${Candidato.SobreNome}`);
+        setUserTitle(Designacao);
+      });
+  }
+
+  useEffect(() => {
+    loadInfos();
+  }, []);
   return (
     <Container>
       <StatusBar barStyle="light-content" backgroundColor={'#0186ae'} />
@@ -47,8 +85,8 @@ export default function Profile({ navigation }) {
           style={styles.image}
         >
           <View style={{ flex: 2 }}>
-            <Name>António Lopes</Name>
-            <Bio>Eng. Informatico, 3 anos de Experiência</Bio>
+            <Name>{userName}</Name>
+            <Bio>{userTitle}</Bio>
             <Details>
               <Score>
                 <Value>21</Value>
@@ -75,7 +113,7 @@ export default function Profile({ navigation }) {
         <ListContainer>
           <TouchableWithoutFeedback
             onPress={(e) => {
-              navigation.navigate('ProfileEditing');
+              navigation.navigate('ProfileInfo');
             }}
           >
             <Item>
@@ -83,10 +121,16 @@ export default function Profile({ navigation }) {
               <TextItem>Configuração de Perfil</TextItem>
             </Item>
           </TouchableWithoutFeedback>
-          <Item>
-            <AntDesign name="folder1" size={22} color={Colores.Primary} />
-            <TextItem>Document management</TextItem>
-          </Item>
+          <TouchableWithoutFeedback
+            onPress={(e) => {
+              navigation.navigate('ProfileEditing');
+            }}
+          >
+            <Item>
+              <AntDesign name="folder1" size={22} color={Colores.Primary} />
+              <TextItem>Document management</TextItem>
+            </Item>
+          </TouchableWithoutFeedback>
           <Item>
             <Icon
               name="ios-notifications-outline"

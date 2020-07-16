@@ -266,12 +266,25 @@ span.notification {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .icon-big i {
-    margin-right: 20px;
+    /* margin-right: 20px; */
 }
 
 .icon-big span {
     font-size: large;
+}
+
+.btn-default-color {
+    background: rgb(26, 32, 53) !important;
+    border-color: rgb(26, 32, 53) !important;
+}
+
+.btn-default-color:hover {
+    background: rgb(26, 32, 53) !important;
+    opacity: 0.7;
+    transition: ease-in-out;
+    border-color: rgb(26, 32, 53) !important;
 }

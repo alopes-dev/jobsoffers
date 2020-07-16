@@ -7,6 +7,8 @@ const OportunidadeCompetencia = require('../../model/OportunidadeCompetencia');
 const { isEmpty } = require('../../../helpers');
 
 const uuid = require('uuid/v4');
+const { GraphQLNonNull, GraphQLString } = require('graphql');
+const Candidatura = require('../../model/Candidatura');
 
 const OportunidadeMutation = {
     addOportunidade: {
@@ -100,15 +102,19 @@ const OportunidadeMutation = {
     //         }, { where: { Id: args.Id } }).then(e => args).catch(err => err)
     //     }
     // },
-    // deleteOportunidade: {
-    //     type: OportunidadeType,
-    //     args: {
-    //         Id: { type: new GraphQLNonNull(GraphQLString) }
-    //     },
-    //     resolve(parent, args) {
-    //         return Estado.destroy({ where: { Id: args.Id } }).then(e => e).catch(err => err)
-    //     }
-    // }
+    deleteOportunidade: {
+        type: OportunidadeType,
+        args: {
+            Id: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        async resolve(parent, args) {
+            const response = await Candidatura.destroy({
+                where: { OportunidadeId: args.Id },
+            });
+            console.log(response);
+            return await Oportunidade.destroy({ where: { Id: args.Id } });
+        },
+    },
 };
 
 module.exports = OportunidadeMutation;

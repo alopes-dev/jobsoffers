@@ -10,7 +10,13 @@ import { Animated } from 'react-animated-css';
 import CardIIustrated from '../tables/cardIIustrated';
 import { isEmpty } from '../../../helpers';
 
-export default function Index({ values, ilustrate, options, ...rest }) {
+export default function Index({
+  values,
+  ilustrate,
+  options,
+  filters,
+  ...rest
+}) {
   const thead = (data) => {
     return Object.keys(data).map((d, i) => {
       return <Col key={i}> {data[d].preview} </Col>;
@@ -76,6 +82,7 @@ export default function Index({ values, ilustrate, options, ...rest }) {
     <div>
       <Container>
         {!isEmpty(ilustrate) && <CardIIustrated options={ilustrate.data} />}
+        {typeof filters === 'function' && filters()}
         <ResponsiveTable>
           <TableHeader>
             {thead(options)}

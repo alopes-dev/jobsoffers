@@ -124,12 +124,14 @@ const PessoaResolve = {
         },
     },
     Pessoa: {
-        type: PessoaType,
-        args: { Id: { type: GraphQLString } },
+        type: new GraphQLList(PessoaType),
+        args: { Id: { type: GraphQLString }, Consts: { type: GraphQLString } },
         resolve(parent, args) {
             console.log(args);
-            return Pessoa.findOne({
-                    where: { Id: args.Id },
+            return Pessoa.findAll({
+                    where: {
+                        [args.Consts]: args.Id,
+                    },
                 })
                 .then((e) => e)
                 .catch((error) => error);

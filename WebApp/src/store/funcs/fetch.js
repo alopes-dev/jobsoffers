@@ -157,6 +157,17 @@ export const ListOportunidadeFetch = async() => {
     return result;
 };
 
+export const removeOportunidade = async(oportunidadeId) => {
+    return await iService.delete({
+        table: 'Oportunidade',
+        getById: {
+            value: oportunidadeId,
+            consts: 'Id',
+        },
+        properties: `Id`,
+    });
+};
+
 export const getFuncoesByAreaId = (Id, props) => {
     const { setValue } = props;
     /** fetch and set TipoEmpregos */

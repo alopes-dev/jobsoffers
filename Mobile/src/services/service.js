@@ -10,13 +10,14 @@ var IService = (function() {
     }
 
     IService.prototype.join = async function(schema, table, isMutation) {
+        console.log(schema);
         let response = await fetch(this.uri, {
             method: 'post',
             body: JSON.stringify(schema),
             headers: { 'Content-Type': 'application/json' },
         });
         let result = await response.json();
-        console.log(result);
+
         result.ok = response.ok;
         if (!response.ok) {
             return result;
@@ -50,14 +51,14 @@ var IService = (function() {
                 query = { query: `{${table}${getById}{${properties}}}` };
                 return this.join(query, table, undefined);
             case servicetypes.STORE:
-                let exclamation = '';
+                // let exclamation = '';
                 if (useExclamation) {
                     exclamation = '!';
                 }
-                let _Itable =
+                _Itable =
                     table.charAt(0).toLowerCase() +
                     table.substr(1, table.length - 1).toLowerCase();
-                let Itable =
+                Itable =
                     table.charAt(0).toLocaleUpperCase() +
                     table.substr(1, table.length - 1).toLowerCase();
 

@@ -86,6 +86,17 @@ var IService = (function() {
                 };
 
                 return this.join(query, table, 'true');
+
+            case servicetypes.REMOVE:
+                Itable =
+                    table.charAt(0).toLocaleUpperCase() +
+                    table.substr(1, table.length - 1).toLowerCase();
+
+                query = {
+                    query: `mutation { delete${Itable}(${getById.consts}: "${getById.value}") {${properties} } }`,
+                };
+
+                return this.join(query, table, 'true');
             default:
                 break;
         }
@@ -103,6 +114,11 @@ var IService = (function() {
 
     Service.prototype.update = function(schema) {
         schema.type = servicetypes.UPDATE;
+        return this.onCreateSchema(schema);
+    };
+
+    Service.prototype.delete = function(schema) {
+        schema.type = servicetypes.REMOVE;
         return this.onCreateSchema(schema);
     };
 

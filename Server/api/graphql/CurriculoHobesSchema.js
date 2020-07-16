@@ -1,17 +1,9 @@
-const {
-    GraphQLObjectType,
-    GraphQLInt,
-    GraphQLString,
-    GraphQLSchema,
-    GraphQLList,
-    GraphQLID,
-} = require('graphql');
+const { GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql');
+
 const CurriculoHobes = require('../model/CurriculoHobes');
 const Estado = require('../model/Estado');
-const Curriculo = require('../model/Curriculo');
 const Hobes = require('../model/Hobes');
 
-const { CurriculoType } = require('./CurriculosSchema');
 const { HobesType } = require('./HobesSchema');
 const { EstadoType } = require('./EstadoSchema');
 
@@ -20,14 +12,13 @@ const CurriculoHobesType = new GraphQLObjectType({
     fields: () => ({
         Id: { type: GraphQLString },
         CurriculoId: { type: GraphQLString },
+        HobesId: { type: GraphQLString },
 
         EstadoId: { type: GraphQLString },
         Hobes: {
             type: HobesType,
             resolve(prev, args) {
-                return Hobes.findOne({
-                        where: { Id: prev.HobesId },
-                    })
+                return Hobes.findOne({ where: { Id: prev.HobesId } })
                     .then((e) => e)
                     .catch((error) => error);
             },
@@ -36,9 +27,7 @@ const CurriculoHobesType = new GraphQLObjectType({
         Estado: {
             type: EstadoType,
             resolve(prev, args) {
-                return Estado.findOne({
-                        where: { Id: prev.EstadoId },
-                    })
+                return Estado.findOne({ where: { Id: prev.EstadoId } })
                     .then((e) => e)
                     .catch((error) => error);
             },

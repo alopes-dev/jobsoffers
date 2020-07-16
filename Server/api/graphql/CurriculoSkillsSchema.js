@@ -19,6 +19,7 @@ const CurriculoSkillsType = new GraphQLObjectType({
     fields: () => ({
         Id: { type: GraphQLString },
         CurriculoId: { type: GraphQLString },
+        SkillsId: { type: GraphQLString },
         EstadoId: { type: GraphQLString },
         Skills: {
             type: SkillsType,
