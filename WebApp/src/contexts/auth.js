@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
       properties: 'UserName, Provider, Email, EmpresaId',
       value: data,
     });
-    console.log(response);
+
     if (!response.ok) {
       const { errors } = response;
       setProcessing(false);
@@ -66,10 +66,8 @@ export const AuthProvider = ({ children }) => {
     }
     const { addSettion } = response.data;
 
-    setUser(addSettion);
-
     localStorage.setItem('@jobs:user', JSON.stringify(addSettion));
-
+    setUser(addSettion);
     return response;
   }
 
@@ -113,7 +111,7 @@ export const AuthProvider = ({ children }) => {
         flag,
       }}
     >
-      {children}
+      {children}{' '}
     </AuthContext.Provider>
   );
 };

@@ -330,7 +330,7 @@ function Authentication(props) {
     const isValid = await unFormValidator(formRef, { data, reset }, Ischema);
 
     if (isValid.success) {
-      await signIn(data);
+      signIn(data);
     }
   }
 

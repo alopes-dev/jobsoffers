@@ -4,9 +4,9 @@ const {
     GraphQLString,
     GraphQLSchema,
     GraphQLList,
-    GraphQLID
+    GraphQLID,
 } = require('graphql');
-const TipoFuncao = require('../model/TipoFuncao')
+const TipoFuncao = require('../model/TipoFuncao');
 const Estado = require('../model/Estado');
 const Area = require('../model/Area');
 
@@ -24,56 +24,59 @@ const TipoFuncaoType = new GraphQLObjectType({
             type: EstadoType,
             resolve(prev, args) {
                 return Estado.findOne({
-                    where: { Id: prev.EstadoId }
-                }).then(e => e).catch(error => error)
-            }
+                        where: { Id: prev.EstadoId },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
         },
         AreaId: { type: GraphQLString },
         Area: {
             type: AreaType,
             resolve(prev, args) {
                 return Area.findOne({
-                    where: { Id: prev.AreaId }
-                }).then(e => e).catch(error => error)
-            }
+                        where: { Id: prev.AreaId },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
         },
         createdAt: { type: GraphQLString },
         updatedAt: { type: GraphQLString },
-    })
-})
+    }),
+});
 
 const TipoFuncaoResolve = {
-    TipoFuncoes: {
+    TipoFuncaoes: {
         type: new GraphQLList(TipoFuncaoType),
         resolve(parent, args) {
             return TipoFuncao.findAll()
-                .then(e => e)
-                .catch(error => error)
-        }
+                .then((e) => e)
+                .catch((error) => error);
+        },
     },
     TipoFuncoes: {
         type: new GraphQLList(TipoFuncaoType),
         args: { AreaId: { type: GraphQLString } },
         resolve(parent, args) {
             return TipoFuncao.findAll({
-                    where: { AreaId: args.AreaId }
+                    where: { AreaId: args.AreaId },
                 })
-                .then(e => e)
-                .catch(error => error)
-        }
+                .then((e) => e)
+                .catch((error) => error);
+        },
     },
     TipoFuncao: {
         type: TipoFuncaoType,
         args: { Id: { type: GraphQLString } },
         resolve(parent, args) {
             return TipoFuncao.findOne({
-                    where: { Id: args.Id }
+                    where: { Id: args.Id },
                 })
-                .then(e => e)
-                .catch(error => error)
-        }
-    }
-}
-
+                .then((e) => e)
+                .catch((error) => error);
+        },
+    },
+};
 
 module.exports = { TipoFuncaoResolve, TipoFuncaoType };

@@ -17,6 +17,7 @@ import { useRef } from 'react';
 import iService from '../../../services/service';
 
 import { toast } from 'react-toastify';
+import { setSelectOp } from '../../../helpers';
 
 const data = [
   { icon: 'flaticon-coins text-success', name: 'Rendimento', value: '1,982' },
@@ -27,6 +28,7 @@ const data = [
 
 export default function ListOportunidade() {
   const [values, setValues] = useState([]);
+  const [filtersValues, setFiltersValues] = useState([]);
   const [tipoFuncao, setTipoFuncao] = useState([]);
   const [experiencia, setExperiencia] = useState([]);
   const dispatch = useDispatch();
@@ -36,6 +38,7 @@ export default function ListOportunidade() {
   useEffect(() => {
     ListOportunidadeFetch().then(({ data }) => {
       setValues(data);
+      setFiltersValues(data);
     });
   }, []);
 
@@ -53,29 +56,40 @@ export default function ListOportunidade() {
   function loadFilterData() {
     /** fetch and set TipoEmpregos */
     iService
-      .fetch({ table: 'Competencias', properties: 'Id Designacao' })
+      .fetch({ table: 'TipoFuncaoes', properties: 'Id Designacao' })
       .then(async (res) => {
         if (!res.ok) return console.error(res.errors);
-        // let data = setSelectOp(res.data, { value: 'Id', label: 'Designacao' });
-        // setValue(data, 'Idiomas');
         console.log(res);
+
+        let data = setSelectOp(res.data, { value: 'Id', label: 'Designacao' });
+        setTipoFuncao(data);
+        // console.log(res);
       })
       .catch((error) => console.log(error));
   }
 
   useEffect(() => {
     loadFilterData();
-  });
+  }, []);
 
   function handleSubmit(data, { reset }) {
-    console.log(data, reset);
-
     Object.keys(data).map((key) => {
       if (data[key] === '') delete data[key];
       return key;
     });
 
+    filtersValues.filter((value) => {
+      return value;
+    });
+
     console.log(data);
+  }
+
+  function handleFilter({ field, value }) {
+    const result = filtersValues.filter(
+      (filterValue) => filterValue[field].toLowerCase() === value.toLowerCase()
+    );
+    setValues(result);
   }
 
   function handleClick() {
@@ -91,9 +105,10 @@ export default function ListOportunidade() {
               type="text"
               fieldtype="select"
               name="tipoFilter"
-              options={[{ value: 'a', label: 'Antonio' }]}
+              options={tipoFuncao}
               onChange={(event) => {
                 console.log(event.value);
+                
               }}
             />
           </Col>
@@ -124,9 +139,11 @@ export default function ListOportunidade() {
               type="text"
               fieldtype="select"
               name="tipoFuncao"
-              options={[{ value: 'a', label: 'Antonio' }]}
+              placeholder="Tipo de Função"
+              options={tipoFuncao}
               onChange={(event) => {
-                console.log(event.value);
+                if (!event) return;
+                handleFilter({ field: 'TipoFuncao', value: event.label });
               }}
             />
           </Col>
