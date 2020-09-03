@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import MainLayout from './components/Layout/MainLayout';
-import AuthLayout from './components/Layout/AuthLayout';
+import MainLayout from "./components/Layout/MainLayout";
+import AuthLayout from "./components/Layout/AuthLayout";
 
-import { useAuth } from './contexts/auth';
+import { useAuth } from "./contexts/auth";
 
-import { Loading } from './style';
+import { Loading } from "./style";
 
 export default function Mainroutes() {
   const { signed, loading } = useAuth();
@@ -13,12 +13,12 @@ export default function Mainroutes() {
   if (loading) {
     return (
       <Loading>
-        <a className="logo" style={{ marginTop: '-160px' }}>
+        <a className="logo" style={{ marginTop: "-160px" }}>
           <img
             src="./img/jobsNoBackGround.png"
             alt="navbar brand"
             className="navbar-brand"
-            style={{ height: '100%' }}
+            style={{ height: "100%" }}
           />
         </a>
         <div id="preloader_1">
@@ -32,5 +32,5 @@ export default function Mainroutes() {
     );
   }
 
-  return signed ? <MainLayout /> : <AuthLayout />;
+  return !signed ? <MainLayout /> : <AuthLayout />;
 }

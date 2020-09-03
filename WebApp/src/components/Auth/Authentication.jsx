@@ -1,40 +1,40 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect } from "react";
 // nodejs library that concatenates classes
 // reactstrap components
-import { Button, Card, CardBody, Container, Row, Col } from 'reactstrap';
-import Field from '../ResusibleComponents/Fields/Field';
-import { isEmpty } from '../../helpers';
-import Spinner from '../ResusibleComponents/Spinner';
+import { Button, Card, CardBody, Container, Row, Col } from "reactstrap";
+import Field from "../ResusibleComponents/Fields/Field";
+import { isEmpty } from "../../helpers";
+import Spinner from "../ResusibleComponents/Spinner";
 
-import { Animated } from 'react-animated-css';
+import { Animated } from "react-animated-css";
 
-import { Form } from '@unform/web';
-import * as Yup from 'yup';
-import unFormValidator from '../ResusibleComponents/Fields/contains/funcs';
-import { useState } from 'react';
-import { useRef } from 'react';
-import { useAuth } from '../../contexts/auth';
+import { Form } from "@unform/web";
+import * as Yup from "yup";
+import unFormValidator from "../ResusibleComponents/Fields/contains/funcs";
+import { useState } from "react";
+import { useRef } from "react";
+import { useAuth } from "../../contexts/auth";
 // core components
 
 function Authentication(props) {
   const formRef = useRef(null);
 
-  const [action, setAction] = useState('');
-  const [papel, setPapel] = useState('');
-  const [password, setPassword] = useState('');
+  const [action, setAction] = useState("");
+  const [papel, setPapel] = useState("");
+  const [password, setPassword] = useState("");
 
   const { signIn } = useAuth();
 
   const options = [
     {
-      name: 'Candidato',
-      icon: 'candidato.png',
-      margign: 'mr-3',
-      margignL: '60px',
+      name: "Candidato",
+      icon: "candidato.png",
+      margign: "mr-3",
+      margignL: "60px",
     },
-    { name: 'Empregador', icon: 'empregador.png', margign: 'ml-3' },
+    { name: "Empregador", icon: "empregador.png", margign: "ml-3" },
   ];
-  let checker = 'login';
+  let checker = "login";
   let Ischema = null;
 
   //   state = {
@@ -49,7 +49,7 @@ function Authentication(props) {
   //   };
 
   useEffect(() => {
-    fetch('http://localhost:5500/api/estados').then(async (e) => {
+    fetch("http://localhost:5500/api/estados").then(async (e) => {
       let dat = await e.json();
     });
   });
@@ -72,9 +72,9 @@ function Authentication(props) {
                   <i
                     className="flaticon-back c-pointer --theme-hover"
                     onClick={(e) => {
-                      setPapel('');
+                      setPapel("");
                     }}
-                  ></i>{' '}
+                  ></i>{" "}
                 </div>
               </div>
             </Col>
@@ -85,8 +85,8 @@ function Authentication(props) {
                 fieldtype="input"
                 name="emai"
                 msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
+                  text: "Email inválido...",
+                  type: "WARNING",
                   show: false,
                 }}
               />
@@ -98,8 +98,8 @@ function Authentication(props) {
                 fieldtype="input"
                 name="emai"
                 msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
+                  text: "Email inválido...",
+                  type: "WARNING",
                   show: false,
                 }}
               />
@@ -111,8 +111,8 @@ function Authentication(props) {
                 fieldtype="input"
                 name="emai"
                 msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
+                  text: "Email inválido...",
+                  type: "WARNING",
                   show: false,
                 }}
               />
@@ -124,8 +124,8 @@ function Authentication(props) {
                 fieldtype="input"
                 name="emai"
                 msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
+                  text: "Email inválido...",
+                  type: "WARNING",
                   show: false,
                 }}
               />
@@ -137,8 +137,8 @@ function Authentication(props) {
                 fieldtype="input"
                 name="emai"
                 msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
+                  text: "Email inválido...",
+                  type: "WARNING",
                   show: false,
                 }}
               />
@@ -150,8 +150,8 @@ function Authentication(props) {
                 fieldtype="input"
                 name="emai"
                 msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
+                  text: "Email inválido...",
+                  type: "WARNING",
                   show: false,
                 }}
               />
@@ -173,10 +173,10 @@ function Authentication(props) {
                   />
                   <div
                     className="input-group-append"
-                    style={{ cursor: 'pointer' }}
+                    style={{ cursor: "pointer" }}
                   >
                     <span className="input-group-text">
-                      <i className="flaticon-repeat"></i>{' '}
+                      <i className="flaticon-repeat"></i>{" "}
                     </span>
                   </div>
                 </div>
@@ -206,11 +206,11 @@ function Authentication(props) {
           >
             <div
               className="card-title  mt-4 fw-mediumbold"
-              style={{ marginLeft: '57px' }}
+              style={{ marginLeft: "57px" }}
             >
               Escolha uma Opção
             </div>
-            <div className="c-flex" style={{ marginTop: '60px' }}>
+            <div className="c-flex" style={{ marginTop: "60px" }}>
               {options.map((o) => {
                 return (
                   <div
@@ -241,12 +241,12 @@ function Authentication(props) {
   }
 
   function register() {
-    checker = 'register';
+    checker = "register";
     return (
       <Row className="ml-3 mr-3">
-        {papel === 'Candidato'
+        {papel === "Candidato"
           ? registerFields()
-          : papel === 'Empregador'
+          : papel === "Empregador"
           ? registerOptions()
           : registerOptions()}
       </Row>
@@ -254,7 +254,7 @@ function Authentication(props) {
   }
 
   function login() {
-    checker = 'login';
+    checker = "login";
     return (
       <Animated
         animationIn="jackInTheBox"
@@ -268,13 +268,13 @@ function Authentication(props) {
           <Col md="12 login-center">
             <div
               className="card-title  mt-4 fw-mediumbold"
-              style={{ marginLeft: '106px' }}
+              style={{ marginLeft: "106px", marginTop: "60px" }}
             >
               Login
             </div>
           </Col>
           <Col md="12">
-            <Row style={{ marginTop: '60px' }}>
+            <Row style={{ marginTop: "60px" }}>
               <Col md="8 login-center">
                 <Field
                   label="Email / Username"
@@ -294,13 +294,23 @@ function Authentication(props) {
                   msm={password}
                 />
               </Col>
-              <Col xl="12 p-2 ">
-                <div style={{ marginLeft: '106px', marginTop: '20px' }}>
-                  <Button className="ml-2 btn-primary" type="submit">
-                    {' '}
-                    Entrar{' '}
-                  </Button>
+              <Col md="8 login-center">
+                <div style={{ marginTop: "20px" }}>
+                  <div className="anchor-button" >
+                    <span>
+                      <i className="flaticon-arrow"></i>
+                    </span>
+                    <strong>Inscreva-se na Jobs</strong>
+                  </div>
                 </div>
+              </Col>
+              <Col md="8 p-0 mt-5 login-center button-actions">
+                <span>
+                  <i className="flaticon-add-user"></i>
+                </span>
+                <span>
+                  <i className="flaticon-repeat"></i>
+                </span>
               </Col>
             </Row>
           </Col>
@@ -316,15 +326,15 @@ function Authentication(props) {
   }
 
   async function handleSubmit(data, { reset }) {
-    if (checker === 'login') {
+    if (checker === "login") {
       return onLogin({ data, reset });
     }
   }
 
   async function onLogin({ data, reset }) {
     Ischema = {
-      UserName: Yup.string().required('E-mail é obrigatória...'),
-      PassWord: Yup.string().required('A palavra passe é obrigatória...'),
+      UserName: Yup.string().required("E-mail é obrigatória..."),
+      PassWord: Yup.string().required("A palavra passe é obrigatória..."),
     };
 
     const isValid = await unFormValidator(formRef, { data, reset }, Ischema);
@@ -340,32 +350,61 @@ function Authentication(props) {
       <Container>
         <Row>
           <Col md="12">
-            <div className="justify-content-center ">
+            <div className="justify-content-center container-flexible ">
+              <div className="clips-container  bg-">
+                <div className="profile-picture">
+                  <div
+                    className="avatar avatar-xl"
+                    style={{
+                      display: "flex",
+                      margin: " 0 auto",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      src="./img/jobsNoBackGround.png"
+                      alt="..."
+                      className="avatar-img rounded-circle"
+                    />
+                  </div>
+                </div>
+                {/* <img className="card-img-top" src="./img/jobs.png" alt="Card" /> */}
+                <div className="form-fields">
+                  <Form ref={formRef} onSubmit={handleSubmit}>
+                    {action === "forget"
+                      ? forgetPassword()
+                      : action === "registe"
+                      ? register()
+                      : login()}
+                  </Form>
+                </div>
+              </div>
               <Card
-                className="p-0 m-0"
+                className="p-0 m-0 clip-desktop"
                 style={{
-                  top: '50%',
-                  transform: ' translateY(23%)',
-                  height: '450px',
-                  position: 'absolute',
-                  width: ' 100%',
+                  top: "50%",
+                  transform: " translateY(23%)",
+                  height: "450px",
+                  position: "absolute",
+                  width: " 100%",
                 }}
               >
                 <CardBody className="p-0 m-0">
-                  <Row className="p-0" style={{ marginLeft: '0px' }}>
+                  <Row className="p-0 " style={{ marginLeft: "0px" }}>
                     <Col
                       md="4 bg-"
                       style={{
-                        position: 'relative',
-                        borderBottomLeftRadius: '5px',
-                        borderTopLeftRadius: '5px',
+                        position: "relative",
+                        borderBottomLeftRadius: "5px",
+                        borderTopLeftRadius: "5px",
                       }}
                     >
-                      <div style={{ height: '450px', borderRadius: '5px' }}>
+                      <div style={{ height: "450px", borderRadius: "5px" }}>
                         <div className="profile-picture">
                           <div
                             className="avatar avatar-xl"
-                            style={{ display: 'flex', margin: ' 0 auto' }}
+                            style={{ display: "flex", margin: " 0 auto" }}
                           >
                             <img
                               src="./img/jobsNoBackGround.png"
@@ -390,15 +429,15 @@ function Authentication(props) {
                           <div
                             className="icon-action "
                             onClick={(e) => {
-                              setAction('login');
+                              setAction("login");
                               document
-                                .querySelectorAll('.icon-big')
+                                .querySelectorAll(".icon-big")
                                 .forEach((i) => {
-                                  i.classList.remove('active');
+                                  i.classList.remove("active");
                                 });
                               document
-                                .querySelector('.login')
-                                .classList.add('active');
+                                .querySelector(".login")
+                                .classList.add("active");
                             }}
                           >
                             <div className="icon-big active login text-center">
@@ -410,15 +449,15 @@ function Authentication(props) {
                           <div
                             className="icon-action"
                             onClick={(e) => {
-                              setAction('registe');
+                              setAction("registe");
                               document
-                                .querySelectorAll('.icon-big')
+                                .querySelectorAll(".icon-big")
                                 .forEach((i) => {
-                                  i.classList.remove('active');
+                                  i.classList.remove("active");
                                 });
                               document
-                                .querySelector('.registe')
-                                .classList.add('active');
+                                .querySelector(".registe")
+                                .classList.add("active");
                             }}
                           >
                             <div className="icon-big registe text-center">
@@ -430,15 +469,15 @@ function Authentication(props) {
                           <div
                             className="icon-action"
                             onClick={(e) => {
-                              setAction('forget');
+                              setAction("forget");
                               document
-                                .querySelectorAll('.icon-big')
+                                .querySelectorAll(".icon-big")
                                 .forEach((i) => {
-                                  i.classList.remove('active');
+                                  i.classList.remove("active");
                                 });
                               document
-                                .querySelector('.forget')
-                                .classList.add('active');
+                                .querySelector(".forget")
+                                .classList.add("active");
                             }}
                           >
                             <div className="icon-big forget text-center">
@@ -450,9 +489,9 @@ function Authentication(props) {
                         </div>
                         <div className="form-fields">
                           <Form ref={formRef} onSubmit={handleSubmit}>
-                            {action === 'forget'
+                            {action === "forget"
                               ? forgetPassword()
-                              : action === 'registe'
+                              : action === "registe"
                               ? register()
                               : login()}
                           </Form>
