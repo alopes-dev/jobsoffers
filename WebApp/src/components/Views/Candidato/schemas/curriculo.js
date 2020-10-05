@@ -96,3 +96,35 @@ EstadoId
 createdAt
 updatedAt
 `;
+
+export const Candidatos = `
+Id
+Candidato {
+  Id
+  Nome
+  SobreNome
+  Morada
+  DataNascimento
+  Status
+  Estado {
+    Designacao
+  }
+  createdAt
+  updatedAt
+  PessoaContacto {
+    Contacto {
+      Telefone
+      Email
+    }
+  }
+  PessoaIdiomas {
+    Idioma {
+      Id
+      Designacao
+    }
+  }
+}
+Oportunidade{EmpresaId Cargo{Id Designacao}
+TipoFuncao {Id Designacao}
+TipoFormacao{Id Designacao}}
+`;

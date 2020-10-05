@@ -93,7 +93,7 @@ export default function SideBarMenu(props) {
               <div className="collapse in" id="collapseExample">
                 <ul className="nav">
                   <li>
-                    <a href="#profile">
+                    <a href="/enterprise">
                       <span className="link-collapse">Meu Perfil</span>
                     </a>
                   </li>

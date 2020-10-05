@@ -13,6 +13,7 @@ import Dashboard from '../../components/Views/Dashboard/dashboard';
 import ListOportunidade from '../../components/Views/Oportunidade/listOportunidade';
 import VOp360 from '../../components/Views/Oportunidade/360';
 import CurriculumViewer from '../Views/Candidato/CurriculumViewer';
+import EmpresaCore from '../Views/Empresa';
 
 export default function MainRouter() {
   return (
@@ -25,6 +26,7 @@ export default function MainRouter() {
         <Route path="/general-view" component={VOp360} />
         <Route path="/curriculum-viewer" component={CurriculumViewer} />
         <Route path="/list-candidato" component={ListCandidato} />
+        <Route path="/enterprise" component={EmpresaCore} />
         <Route path="/candidato" component={AddCandidato} />
       </Switch>
     </Provider>

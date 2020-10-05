@@ -5,6 +5,7 @@ import CoreOportunidade from './components/Views/Oportunidade/index';
 import Dashboard from './components/Views/Dashboard/dashboard';
 import ListOportunidade from './components/Views/Oportunidade/listOportunidade';
 import VOp360 from './components/Views/Oportunidade/360';
+import EmpresaCore from './components/Views/Empresa';
 
 const routes = [{
         name: 'Dashboard',
@@ -12,6 +13,15 @@ const routes = [{
         icon: 'flaticon-home',
         layout: '/admin',
         components: Dashboard,
+    },
+
+    {
+        name: 'Empregador',
+        path: '/enterprise',
+        icon: 'flaticon-store',
+        layout: '/admin',
+        show: false,
+        components: EmpresaCore,
     },
 
     {

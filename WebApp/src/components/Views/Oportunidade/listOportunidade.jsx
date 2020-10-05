@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setOportunidadeId } from '../../../store/actions/oportunidade';
 
 import history from '../../../history';
-import { Card, CardBody, Row, Col, Button } from 'reactstrap';
+import { Row, Col, Button } from 'reactstrap';
 import Field from '../../ResusibleComponents/Fields/Field';
 import { Form } from '@unform/core';
 import { useRef } from 'react';
@@ -108,7 +108,6 @@ export default function ListOportunidade() {
               options={tipoFuncao}
               onChange={(event) => {
                 console.log(event.value);
-                
               }}
             />
           </Col>

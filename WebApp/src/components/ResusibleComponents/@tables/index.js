@@ -23,6 +23,20 @@ export default function Index({
     });
   };
 
+  const renderContent = (value, op) => {
+    if (op === 'Avatar')
+      return (
+        <div className="avatar-sm float-left mr-2">
+          <img
+            src="./img/profile.jpg"
+            alt="..."
+            className="avatar-img rounded-circle"
+          />
+        </div>
+      );
+    return value[op];
+  };
+
   const tbody = (values, options) => {
     if (isEmpty(values)) return noContentFound();
     return values.map((v, i) => {
@@ -38,7 +52,7 @@ export default function Index({
                   }}
                   data-label={op}
                 >
-                  {v[op]}
+                  {renderContent(v, op)}
                 </Col>
               );
             })}
