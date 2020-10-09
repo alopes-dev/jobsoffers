@@ -128,7 +128,7 @@ export const ListOportunidadeFetch = async() => {
     /** fetch and set TipoEmpregos */
 
     const { EmpresaId } = JSON.parse(localStorage.getItem('@jobs:user'));
-    console.log(EmpresaId);
+
     let result = await iService.fetch({
         table: 'OportunidadesByEmpresa',
         getById: {
@@ -173,7 +173,7 @@ export const getFuncoesByAreaId = (Id, props) => {
     /** fetch and set TipoEmpregos */
     iService
         .fetch({
-            getById: { field: 'AreaId', value: Id },
+            getById: { field: 'Id', value: Id, consts: 'AreaId' },
             table: 'TipoFuncoes',
             properties: 'Id Designacao',
         })

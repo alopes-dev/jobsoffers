@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Field from '../../ResusibleComponents/Fields/Field';
 import { Col, Container, Row, Card, CardBody, Button } from 'reactstrap';
 
@@ -14,20 +14,99 @@ import {
 import { Form } from '@unform/web';
 import unFormValidator from '../../ResusibleComponents/Fields/contains/funcs';
 import * as Yup from 'yup';
-import IService from '../../../services/service';
+import iservice from '../../../services/service';
+import { toast } from 'react-toastify';
 
-const AddOportunidade = (props) => {
+const AddOportunidade = ({ oportunidadeEdit, ...props }) => {
+  //#region Variables
   const formRef = useRef(null);
   const { data, ADD_OPORTUNITIES } = props;
+  const [oportunidadeId, setOportunidadeId] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [navigateTo, setNavigateTo] = useState('');
+  //#endregion
 
-  useEffect(() => {
-    renderData(props);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //#region Handles functions
+  const load = async () => {
+    const oportunidadeDetalhe = localStorage.getItem(
+      '@jobs:oportunidade-detalhe'
+    );
+
+    if (oportunidadeDetalhe) {
+      const { Id } = JSON.parse(oportunidadeDetalhe)?.oportunidade;
+      setOportunidadeId(Id);
+
+      const response = await iservice.fetch({
+        getById: {
+          value: Id,
+          field: 'Id',
+          consts: 'Id',
+        },
+        table: 'oportunidade',
+        properties: `
+        Id
+        CargaHoraria
+        Salario
+        DataLimite
+        Experiencia
+        NumVagas
+        Detalhes
+        IsFinalizado
+        TipoEmprego{Designacao Id}
+        TipoFormacao{Designacao Id}
+        Cidade
+        TipoFuncao{Designacao Id}
+        EmpresaId
+        Provincia{Designacao Id}
+        Nacionalidade{Designacao Id}
+        Estado{Designacao Id}
+        createdAt
+        updatedAt`,
+      });
+
+      const {
+        data: {
+          Nacionalidade,
+          Estado,
+          CargaHoraria,
+          Cidade,
+          Salario,
+          Experiencia,
+          NumVagas,
+          DataLimite,
+          Detalhes,
+          Provincia,
+          TipoFuncao,
+          TipoFormacao,
+          TipoEmprego,
+        },
+      } = response;
+
+      formRef.current.setData({
+        Cidade,
+        Salario,
+        Experiencia,
+        NumVagas,
+        DataLimite,
+        Detalhes,
+        CargaHoraria: [{ value: CargaHoraria, label: CargaHoraria }],
+        EstadoId: [{ value: Estado.Id, label: Estado.Designacao }],
+        NacionalidadeId: [
+          { value: Nacionalidade.Id, label: Nacionalidade.Designacao },
+        ],
+        ProvinciaId: [{ value: Provincia.Id, label: Provincia.Designacao }],
+        TipoFuncaoId: [{ value: TipoFuncao.Id, label: TipoFuncao.Designacao }],
+        TipoEmpregoId: [
+          { value: TipoEmprego.Id, label: TipoEmprego.Designacao },
+        ],
+        TipoFormacaoId: [
+          { value: TipoFormacao.Id, label: TipoFormacao.Designacao },
+        ],
+      });
+    }
+  };
 
   const handleSubmit = async (data, { reset }) => {
-    const iservice = new IService();
-
     const Ischema = {
       area: Yup.string().required('Área é obrigatório.'),
       EstadoId: Yup.string().required('Estado é obrigatório.'),
@@ -47,19 +126,50 @@ const AddOportunidade = (props) => {
       DataLimite: Yup.date().required('Data Limite é obrigatório.'),
     };
 
+    if (oportunidadeEdit) {
+      delete data.area;
+      setIsUpdating(true);
+      await iservice.useGeneric({
+        query: `mutation OportunidadeInput($input:OportunidadeInput,$id:String!){
+          updateOportunidade(input:$input,Id:$id){Id}
+        }`,
+        variables: { id: oportunidadeId, input: data },
+      });
+      setIsUpdating(false);
+
+      setTimeout(() => {
+        setNavigateTo('list-oportunidade');
+      }, [600]);
+      return toast.success('Atualizado com successo!!');
+    }
+
     let isValid = await unFormValidator(formRef, { data, reset }, Ischema);
     if (!isValid) return;
     //Eliminar a area do objecto
     delete data.area;
-    let result = await iservice.store({
+
+    return await iservice.store({
       table: 'oportunidade',
       value: data,
       properties: 'TipoFormacaoId',
     });
-
-    console.log(result);
-    console.log(isValid);
   };
+  //#endregion
+
+  //#region useEffects
+  useEffect(() => {
+    renderData(props);
+  }, []);
+
+  useEffect(() => {
+    if (!oportunidadeEdit) return;
+    load();
+  }, [oportunidadeEdit]);
+
+  useEffect(() => {
+    if (!isEmpty(navigateTo)) window.location = '/list-oportunidade';
+  }, [navigateTo]);
+  //#endregion
 
   return (
     <Container>
@@ -252,7 +362,11 @@ const AddOportunidade = (props) => {
               <Col md="12">
                 <div className="float-right ">
                   <Button className="ml-2 btn-primary" type="submit">
-                    Continuar
+                    {oportunidadeEdit
+                      ? isUpdating
+                        ? 'Atualizando...'
+                        : 'Actualização'
+                      : 'Salvar'}
                   </Button>
                   <Button className="ml-2 btn-danger">Cancelar</Button>
                 </div>

@@ -5,6 +5,7 @@ import CoreOportunidade from './components/Views/Oportunidade/index';
 import Dashboard from './components/Views/Dashboard/dashboard';
 import ListOportunidade from './components/Views/Oportunidade/listOportunidade';
 import VOp360 from './components/Views/Oportunidade/360';
+import MobileCore from './mobile';
 import EmpresaCore from './components/Views/Empresa';
 
 const routes = [{
@@ -39,6 +40,13 @@ const routes = [{
                 components: CoreOportunidade,
                 privice: 'admin',
             },
+            // {
+            //     name: 'Detalhe da Oportunidade',
+            //     path: '/oportunidades/:id',
+            //     show: false,
+            //     components: CoreOportunidade,
+            //     privice: 'admin',
+            // },
             {
                 name: 'Visão Geral da Oportunidade',
                 path: '/general-view',
@@ -105,27 +113,43 @@ const routes = [{
         path: '/curriculo',
         icon: 'flaticon-shapes',
     },
-    // {
-    //     name: 'Procurar VC',
-    //     path: '/procurarVC',
-    //     icon: 'flaticon-search-1',
-    // },
-    // {
-    //     name: 'Beneficios',
-    //     path: '/Beneficios',
-    //     icon: 'icon-support',
-    //     components: AddCandidato,
-    // },
-    // {
-    //     name: 'Empresa',
-    //     path: '/Empresa',
-    //     icon: 'icon-compass',
-    // },
-    // {
-    //     name: 'Cargos',
-    //     path: '/Cargos',
-    //     icon: 'icon-briefcase',
-    // },
+
+    {
+        name: 'Mobile Screen',
+        path: '/mobile-root',
+        icon: 'flaticon-home',
+        show: false,
+        layout: '/admin',
+        components: MobileCore,
+    },
+    {
+        name: 'Mobile',
+        icon: 'flaticon-idea',
+        show: false,
+        collapse: true,
+        children: [{
+                name: 'Home',
+                path: '/mobile-home',
+                show: false,
+                components: ListOportunidade,
+            },
+            {
+                name: 'Settings',
+                path: '/mobile-settings',
+                show: false,
+                components: CoreOportunidade,
+                privice: 'admin',
+            },
+            {
+                name: 'Profile',
+                path: '/home-profile',
+                show: false,
+                components: VOp360,
+                privice: 'admin',
+                aliasIcon: 'flaticon-layers-1',
+            },
+        ],
+    },
 ];
 
 export default routes;

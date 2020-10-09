@@ -42,6 +42,7 @@ import iservice from '../../../services/service';
 import { CurriculumSchema, CandidaturaCurriculo } from './schemas/curriculo';
 import formatValue from '../../../formatValue';
 import { toast } from 'react-toastify';
+import { approveCandidato } from '../../../store/funcs/fetch';
 
 export default function CurriculumViewer(props) {
   const [curriculo, setCurriculo] = useState({});
@@ -52,6 +53,7 @@ export default function CurriculumViewer(props) {
   const [pessoaIdiomas, setPessoaIdiomas] = useState([]);
   const [candidaturaCurriculo, setCandidaturaCurriculo] = useState([]);
   const [tipoDocumentos, setTipoDocumentos] = useState([]);
+  const [reload, setReload] = useState(null);
 
   const { CandidatoId, CandidaturaId } = JSON.parse(
     localStorage.getItem('@Candidatura')
@@ -61,52 +63,55 @@ export default function CurriculumViewer(props) {
 
   const toggle = () => setModal(!modal);
 
+  async function loadData() {
+    const response = await iservice.fetch({
+      getById: {
+        value: CandidatoId,
+        field: 'Id',
+        consts: 'CandidatoId',
+      },
+      table: 'Curriculo',
+      properties: CurriculumSchema,
+    });
+    if (response.ok) setCurriculo(response.data);
+
+    const TipoDocumentos = await iservice.fetch({
+      table: 'TipoDocumentos',
+      properties: 'Id Designacao',
+    });
+
+    if (TipoDocumentos.ok)
+      setTipoDocumentos(
+        TipoDocumentos.data.map((item) => {
+          return {
+            value: item.Id,
+            label: item.Designacao,
+          };
+        })
+      );
+  }
+
+  async function loadOthersCandidaturas() {
+    const response = await iservice.fetch({
+      getById: {
+        value: CandidatoId,
+        field: 'Id',
+        consts: 'CandidatoId',
+      },
+      table: 'Candidatura',
+      properties: CandidaturaCurriculo,
+    });
+
+    if (response.ok) setCandidaturaCurriculo(response.data);
+  }
+
   useEffect(() => {
-    async function loadData() {
-      const response = await iservice.fetch({
-        getById: {
-          value: CandidatoId,
-          field: 'Id',
-          consts: 'CandidatoId',
-        },
-        table: 'Curriculo',
-        properties: CurriculumSchema,
-      });
-      if (response.ok) setCurriculo(response.data);
-
-      const TipoDocumentos = await iservice.fetch({
-        table: 'TipoDocumentos',
-        properties: 'Id Designacao',
-      });
-
-      if (TipoDocumentos.ok)
-        setTipoDocumentos(
-          TipoDocumentos.data.map((item) => {
-            return {
-              value: item.Id,
-              label: item.Designacao,
-            };
-          })
-        );
-    }
-
-    async function loadOthersCandidaturas() {
-      const response = await iservice.fetch({
-        getById: {
-          value: CandidatoId,
-          field: 'Id',
-          consts: 'CandidatoId',
-        },
-        table: 'Candidatura',
-        properties: CandidaturaCurriculo,
-      });
-      console.log(response);
-      if (response.ok) setCandidaturaCurriculo(response.data);
-    }
-
     loadData();
-    loadOthersCandidaturas();
   }, []);
+
+  useEffect(() => {
+    loadOthersCandidaturas();
+  }, [reload]);
 
   useEffect(() => {
     const { Candidato } = curriculo || {};
@@ -133,6 +138,16 @@ export default function CurriculumViewer(props) {
     date = new Date(date).toDateString().split(' ');
 
     return date[1] + ' ' + date[3];
+  }
+
+  async function handleApprove({ CandidatoId, Id, IsAnalizado }) {
+    await approveCandidato({
+      CandidatoId,
+      Id,
+      IsAnalizado,
+    });
+
+    setReload(Math.random());
   }
 
   function curriculoDetalhes() {
@@ -258,7 +273,7 @@ export default function CurriculumViewer(props) {
   }
 
   function curriculoCandidaturas() {
-    return candidaturaCurriculo.map(({ Oportunidade }, index) => {
+    return candidaturaCurriculo.map(({ Oportunidade, Id }, index) => {
       return (
         <div className="card card-pricing" key={index}>
           <div className="card-header">
@@ -309,11 +324,27 @@ export default function CurriculumViewer(props) {
           </div>
           <div className="card-footer">
             <ActionsButton>
-              <Button>
+              <Button
+                onClick={() => {
+                  handleApprove({
+                    Id,
+                    CandidatoId,
+                    IsAnalizado: 1,
+                  });
+                }}
+              >
                 <i className="icon-pin" />
                 Aprovar
               </Button>
-              <Button>
+              <Button
+                onClick={() => {
+                  handleApprove({
+                    Id,
+                    CandidatoId,
+                    IsAnalizado: -1,
+                  });
+                }}
+              >
                 <i className="flaticon-cross" />
                 Rejeitar
               </Button>
@@ -376,6 +407,7 @@ export default function CurriculumViewer(props) {
   function handleClick() {
     formRef.current.submitForm();
   }
+
   return (
     <Row>
       <Modal isOpen={modal} toggle={toggle}>
@@ -550,11 +582,27 @@ export default function CurriculumViewer(props) {
               </Col>
               <Col xl="12">
                 <ActionsButton>
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      handleApprove({
+                        Id: CandidaturaId,
+                        CandidatoId,
+                        IsAnalizado: 1,
+                      });
+                    }}
+                  >
                     <i className="icon-pin" />
                     Aprovar
                   </Button>
-                  <Button>
+                  <Button
+                    onClick={() => {
+                      handleApprove({
+                        Id: CandidaturaId,
+                        CandidatoId,
+                        IsAnalizado: -1,
+                      });
+                    }}
+                  >
                     <i className="flaticon-cross" />
                     Rejeitar
                   </Button>

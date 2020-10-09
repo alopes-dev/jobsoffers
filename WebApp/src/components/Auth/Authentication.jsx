@@ -268,7 +268,7 @@ function Authentication(props) {
           <Col md="12 login-center">
             <div
               className="card-title  mt-4 fw-mediumbold"
-              style={{ marginLeft: '106px' }}
+              style={{ marginLeft: '106px', marginTop: '60px' }}
             >
               Login
             </div>
@@ -294,13 +294,28 @@ function Authentication(props) {
                   msm={password}
                 />
               </Col>
-              <Col xl="12 p-2 ">
-                <div style={{ marginLeft: '106px', marginTop: '20px' }}>
-                  <Button className="ml-2 btn-primary" type="submit">
-                    {' '}
-                    Entrar{' '}
-                  </Button>
+              <Col md="8 login-center">
+                <div
+                  style={{ marginTop: '20px' }}
+                  onClick={(e) => {
+                    formRef.current.submitForm();
+                  }}
+                >
+                  <div className="anchor-button">
+                    <span>
+                      <i className="flaticon-arrow"></i>
+                    </span>
+                    <strong>Inscreva-se na Jobs</strong>
+                  </div>
                 </div>
+              </Col>
+              <Col md="8 p-0 mt-5 login-center button-actions">
+                <span>
+                  <i className="flaticon-add-user"></i>
+                </span>
+                <span>
+                  <i className="flaticon-repeat"></i>
+                </span>
               </Col>
             </Row>
           </Col>
@@ -316,6 +331,7 @@ function Authentication(props) {
   }
 
   async function handleSubmit(data, { reset }) {
+    console.log(data);
     if (checker === 'login') {
       return onLogin({ data, reset });
     }
@@ -328,7 +344,7 @@ function Authentication(props) {
     };
 
     const isValid = await unFormValidator(formRef, { data, reset }, Ischema);
-
+    console.log(isValid);
     if (isValid.success) {
       signIn(data);
     }
@@ -340,9 +356,38 @@ function Authentication(props) {
       <Container>
         <Row>
           <Col md="12">
-            <div className="justify-content-center ">
+            <div className="justify-content-center container-flexible ">
+              <div className="clips-container  bg-">
+                <div className="profile-picture">
+                  <div
+                    className="avatar avatar-xl"
+                    style={{
+                      display: 'flex',
+                      margin: ' 0 auto',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <img
+                      src="./img/jobsNoBackGround.png"
+                      alt="..."
+                      className="avatar-img rounded-circle"
+                    />
+                  </div>
+                </div>
+                {/* <img className="card-img-top" src="./img/jobs.png" alt="Card" /> */}
+                <div className="form-fields">
+                  <Form ref={formRef} onSubmit={handleSubmit}>
+                    {action === 'forget'
+                      ? forgetPassword()
+                      : action === 'registe'
+                      ? register()
+                      : login()}
+                  </Form>
+                </div>
+              </div>
               <Card
-                className="p-0 m-0"
+                className="p-0 m-0 clip-desktop"
                 style={{
                   top: '50%',
                   transform: ' translateY(23%)',
@@ -352,7 +397,7 @@ function Authentication(props) {
                 }}
               >
                 <CardBody className="p-0 m-0">
-                  <Row className="p-0" style={{ marginLeft: '0px' }}>
+                  <Row className="p-0 " style={{ marginLeft: '0px' }}>
                     <Col
                       md="4 bg-"
                       style={{

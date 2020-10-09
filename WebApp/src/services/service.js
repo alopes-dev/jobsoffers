@@ -122,6 +122,25 @@ var IService = (function() {
         return this.onCreateSchema(schema);
     };
 
+    Service.prototype.useGeneric = function({ query, variables }) {
+        let schema;
+        if (query === '') {
+            return console.error('you must pass some string on the query property');
+        }
+
+        if (query !== undefined) {
+            schema = { query, variables };
+        } else {
+            schema = { query };
+        }
+
+        return fetch(this.uri, {
+            method: 'post',
+            body: JSON.stringify(schema),
+            headers: { 'Content-Type': 'application/json' },
+        });
+    };
+
     return Service;
 })();
 

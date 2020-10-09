@@ -1,21 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import routes from '../../routes';
-import { isEmpty } from '../../helpers';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import routes from "../../routes";
+import { isEmpty } from "../../helpers";
+import { toast } from "react-toastify";
 
 export default function SideBarMenu(props) {
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const { UserName, Email } = JSON.parse(localStorage.getItem('@jobs:user'));
-
-    setUserName(UserName);
+    try {
+      const { UserName, Email } = JSON.parse(
+        localStorage.getItem("@jobs:user")
+      );
+      setUserName(UserName);
+    } catch (error) {
+      // toast.warning(error.message);
+    }
   });
 
   function getChildren(child) {
     if (!isEmpty(child)) {
       return child.map((c, i) => {
-        if (c.show === false) return '';
+        if (c.show === false) return "";
         return (
           <li key={c + i}>
             <a href={c.path}>
@@ -31,7 +37,7 @@ export default function SideBarMenu(props) {
     if (!isEmpty(routes)) {
       return routes.map((r, i) => {
         const { collapse, children, icon, name, path, show } = r;
-        if (show === false) return '';
+        if (show === false) return "";
         if (collapse !== undefined && collapse === true) {
           return (
             <li className="nav-item" key={r + i}>

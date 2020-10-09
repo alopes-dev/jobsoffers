@@ -59,11 +59,9 @@ export default function ListOportunidade() {
       .fetch({ table: 'TipoFuncaoes', properties: 'Id Designacao' })
       .then(async (res) => {
         if (!res.ok) return console.error(res.errors);
-        console.log(res);
 
         let data = setSelectOp(res.data, { value: 'Id', label: 'Designacao' });
         setTipoFuncao(data);
-        // console.log(res);
       })
       .catch((error) => console.log(error));
   }
@@ -202,7 +200,11 @@ export default function ListOportunidade() {
           handleRemoveItem(e.Id);
         }}
         editLine={(e) => {
-          console.log(e);
+          localStorage.setItem(
+            '@jobs:oportunidade-detalhe',
+            JSON.stringify({ oportunidade: e })
+          );
+          window.location = `oportunidade-details`;
         }}
       />
     </div>

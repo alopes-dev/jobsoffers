@@ -65,7 +65,6 @@ const OportunidadeMutation = {
                         CreatedAt: osysdate,
                         UpdatedAt: osysdate,
                     });
-                    console.log(data);
                 });
             }
 
@@ -81,7 +80,6 @@ const OportunidadeMutation = {
                         CreatedAt: osysdate,
                         UpdatedAt: osysdate,
                     });
-                    console.log(data);
                 });
             }
 
@@ -89,19 +87,31 @@ const OportunidadeMutation = {
         },
     },
 
-    // updateOportunidade: {
-    //     type: OportunidadeType,
-    //     args: {
-    //         Id: { type: new GraphQLNonNull(GraphQLString) },
-    //         Designacao: { type: new GraphQLNonNull(GraphQLString) }
-    //     },
-    //     resolve(parent, args) {
-    //         return Estado.update({
-    //             Designacao: args.Designacao,
-    //             UpdatedAt: new Date().toJSON()
-    //         }, { where: { Id: args.Id } }).then(e => args).catch(err => err)
-    //     }
-    // },
+    updateOportunidade: {
+        type: OportunidadeType,
+        args: {
+            input: {
+                type: OportunidadeInput,
+            },
+            Id: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        async resolve(parent, { input, Id }) {
+            const sysdate = new Date(Date.now());
+            const { IdiomaId, BeneficioId, CompetenciaId } = input;
+            delete input.IdiomaId;
+            delete input.BeneficioId;
+            delete input.CompetenciaId;
+
+            if (isEmpty(Id)) console.log('Throw new error');
+            //Criar uma linha de oportunidade
+            const data = await Oportunidade.update({
+                ...input,
+                UpdatedAt: sysdate,
+            }, { where: { Id } });
+
+            return data;
+        },
+    },
     deleteOportunidade: {
         type: OportunidadeType,
         args: {

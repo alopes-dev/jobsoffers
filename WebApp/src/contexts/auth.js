@@ -53,6 +53,8 @@ export const AuthProvider = ({ children }) => {
       value: data,
     });
 
+    console.log(response);
+
     if (!response.ok) {
       const { errors } = response;
       setProcessing(false);

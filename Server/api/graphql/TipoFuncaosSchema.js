@@ -57,10 +57,11 @@ const TipoFuncaoResolve = {
     },
     TipoFuncoes: {
         type: new GraphQLList(TipoFuncaoType),
-        args: { AreaId: { type: GraphQLString } },
+        args: { Id: { type: GraphQLString }, Consts: { type: GraphQLString } },
         resolve(parent, args) {
             return TipoFuncao.findAll({
-                    where: { AreaId: args.AreaId },
+                    where: {
+                        [args.Consts]: args.Id },
                 })
                 .then((e) => e)
                 .catch((error) => error);
