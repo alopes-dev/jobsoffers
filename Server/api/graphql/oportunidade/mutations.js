@@ -27,6 +27,10 @@ const OportunidadeMutation = {
             delete input.BeneficioId;
             delete input.CompetenciaId;
 
+            console.log(input);
+
+            // return;g
+
             //Criar uma linha de oportunidade
             const data = await Oportunidade.create({
                     Id: uuid(),

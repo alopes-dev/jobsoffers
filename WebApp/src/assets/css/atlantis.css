@@ -465,6 +465,8 @@ body {
     align-items: center;
     position: relative;
     transition: all 0.3s;
+    padding-top: 140px;
+    padding-bottom: 40px;
 }
 
 .logo-header .big-logo {
@@ -13814,6 +13816,7 @@ div.table-responsive>div.dataTables_wrapper>div.row>div[class^='col-']:last-chil
         position: relative;
         padding-left: 15px;
         padding-right: 15px;
+        padding-top: 160px;
     }
     .logo-header .logo {
         position: absolute;

@@ -3,6 +3,7 @@ const {
     GraphQLInt,
     GraphQLString,
     GraphQLSchema,
+    GraphQLNonNull,
     GraphQLList,
     GraphQLInputObjectType,
 } = require('graphql');
@@ -119,6 +120,30 @@ const PessoaIdiomasMutation = {
                 await t.rollback();
                 throw new Error(error.message);
             }
+        },
+    },
+    updatePessoaidiomas: {
+        type: PessoaIdiomaType,
+        args: {
+            input: {
+                type: PessoaidiomasInput,
+            },
+            Id: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        async resolve(parent, { Id, input: { IdiomaId } }) {
+            // const pessoaIdioma = PessoaIdioma.findOne({ where: { Id: Id } });
+            const sysdate = new Date(Date.now());
+            // console.log(pessoaIdioma);
+            // if (!pessoaIdioma)
+            //     throw new error('idioma não existente para o seu usuario');
+
+            const pessoaUpdate = await PessoaIdioma.update({
+                IdiomaId,
+                UpdatedAt: sysdate,
+            }, { where: { Id: Id } });
+
+            console.log(pessoaUpdate);
+            return pessoaUpdate;
         },
     },
 };

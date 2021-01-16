@@ -145,15 +145,31 @@ const AddOportunidade = ({ oportunidadeEdit, ...props }) => {
 
     let isValid = await unFormValidator(formRef, { data, reset }, Ischema);
     if (!isValid) return;
+
+    const user = localStorage.getItem('@jobs:user');
+
+    if (isEmpty(user)) return toast.warning('Forneça a empresa..');
+
+    const { EmpresaId } = JSON.parse(user);
     //Eliminar a area do objecto
     delete data.area;
 
-    return await iservice.store({
+    if (isEmpty(EmpresaId)) return toast.warning('Forneça a empresa..');
+    data['EmpresaId'] = EmpresaId;
+
+    const response = await iservice.store({
       table: 'oportunidade',
+      type: 'STORE',
       value: data,
-      properties: 'TipoFormacaoId',
+      useExclamation: false,
+      properties: 'Id',
     });
+
+    if (response.errors) return toast.error(response.errors[0].message);
+
+    return toast.success('Oportunidade feito com sucesso!');
   };
+
   //#endregion
 
   //#region useEffects

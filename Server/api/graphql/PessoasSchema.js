@@ -298,7 +298,7 @@ const addContactos = async(data = [], transaction) => {
 
     const osysdate = new Date(Date.now());
 
-    result = await ContactoModel.create({
+    await ContactoModel.create({
             Id: uuid(),
             ...data[0],
             CreatedAt: osysdate,

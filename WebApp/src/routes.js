@@ -113,6 +113,11 @@ const routes = [{
         path: '/curriculo',
         icon: 'flaticon-shapes',
     },
+    {
+        name: 'Administração',
+        path: '/administracao',
+        icon: 'flaticon-technology-1',
+    },
 
     {
         name: 'Mobile Screen',

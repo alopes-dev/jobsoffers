@@ -9,9 +9,11 @@ const {
 const ContaUsuario = require('../model/ContaUsuario');
 const Estado = require('../model/Estado');
 const Pessoa = require('../model/Pessoa');
+const Empresa = require('../model/Empresa');
 
 const { EstadoType } = require('./EstadoSchema');
 const { PessoaType } = require('./PessoasSchema');
+const { EmpresaType } = require('./EmpresasSchema');
 
 const ContaUsuarioType = new GraphQLObjectType({
     name: 'ContaUsuarioObject',
@@ -28,6 +30,17 @@ const ContaUsuarioType = new GraphQLObjectType({
             resolve(prev, args) {
                 return Pessoa.findOne({
                         where: { Id: prev.PessoaId },
+                    })
+                    .then((e) => e)
+                    .catch((error) => error);
+            },
+        },
+        EmpresaId: { type: GraphQLString },
+        Empresa: {
+            type: EmpresaType,
+            resolve(prev, args) {
+                return Empresa.findOne({
+                        where: { Id: prev.EmpresaId },
                     })
                     .then((e) => e)
                     .catch((error) => error);

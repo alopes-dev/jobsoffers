@@ -6,11 +6,11 @@ import React, {
   useContext,
   useMemo,
   useCallback,
-} from "react";
+} from 'react';
 
 // import api from '../services/service';
-import { toast } from "react-toastify";
-import { SCREENSTACK_INITIAL_VALUES } from "./store";
+import { toast } from 'react-toastify';
+import { SCREENSTACK_INITIAL_VALUES } from './store';
 
 const MobileAppContextData = {
   appCurrentStack: [],
@@ -28,14 +28,14 @@ const MobileAppContext = createContext(MobileAppContextData);
 
 export const MobileAppProvider = ({ children }) => {
   const [appCurrentStack, setAppCurrentStack] = useState([]);
-  const [activeScreen, setActiveScreen] = useState("Details");
+  const [activeScreen, setActiveScreen] = useState('');
   const [startAnimation, setStartAnimation] = useState(true);
   const [screenStack, setScreenStack] = useState(SCREENSTACK_INITIAL_VALUES);
 
   const handleActionScreen = useCallback(() => {
     setStartAnimation(false);
     setTimeout(() => {
-      setActiveScreen("");
+      setActiveScreen('');
       setStartAnimation(true);
     }, 300);
   });
@@ -46,9 +46,9 @@ export const MobileAppProvider = ({ children }) => {
     currentStack.pop(currentStack[currentStack.length - 1]);
     if (currentStack.length === 0) {
       document
-        .querySelector(".logo-header")
-        .querySelector(".backScreen")
-        .classList.remove("on");
+        .querySelector('.logo-header')
+        .querySelector('.backScreen')
+        .classList.remove('on');
     }
     setAppCurrentStack(currentStack);
   }, [appCurrentStack]);
@@ -58,11 +58,11 @@ export const MobileAppProvider = ({ children }) => {
 
     if (!activeStack) return;
     const backScreen = document
-      .querySelector(".logo-header")
-      .querySelector(".backScreen");
+      .querySelector('.logo-header')
+      .querySelector('.backScreen');
 
-    if (activeStack.length === 0) backScreen.classList.remove("on");
-    if (activeStack.backScreen) backScreen.classList.add("on");
+    if (activeStack.length === 0) backScreen.classList.remove('on');
+    if (activeStack.backScreen) backScreen.classList.add('on');
   }, [appCurrentStack]);
 
   const MobileAppValues = useMemo(

@@ -1,5 +1,5 @@
-import React from "react";
-import { useMobileApp } from "../../mobile/contexts/app";
+import React from 'react';
+import { useMobileApp } from '../../mobile/contexts/app';
 
 const TopMenu = () => {
   const { handleBackScreenOnClick } = useMobileApp();
@@ -11,12 +11,13 @@ const TopMenu = () => {
         onClick={handleBackScreenOnClick}
       ></i>
       {/* </button> */}
+
       <a href="/" className="logo">
         <img
           src="./img/jobsNoBackGround.png"
           alt="navbar brand"
           className="navbar-brand"
-          style={{ height: "100%" }}
+          style={{ height: '100%' }}
         />
       </a>
       <button

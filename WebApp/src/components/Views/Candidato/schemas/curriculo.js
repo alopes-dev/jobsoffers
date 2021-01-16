@@ -82,6 +82,7 @@ Oportunidade {
   Experiencia
   NumVagas
   IsFinalizado
+  EmpresaId
   TipoEmprego{Designacao}
   TipoFormacao{Designacao}
   Cidade

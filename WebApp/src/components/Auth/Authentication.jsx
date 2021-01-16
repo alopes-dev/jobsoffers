@@ -14,6 +14,8 @@ import unFormValidator from '../ResusibleComponents/Fields/contains/funcs';
 import { useState } from 'react';
 import { useRef } from 'react';
 import { useAuth } from '../../contexts/auth';
+import iService from '../../services/service';
+import { toast } from 'react-toastify';
 // core components
 
 function Authentication(props) {
@@ -22,6 +24,7 @@ function Authentication(props) {
   const [action, setAction] = useState('');
   const [papel, setPapel] = useState('');
   const [password, setPassword] = useState('');
+  const [userNameOrEmail, setUserNameOrEmail] = useState('');
 
   const { signIn } = useAuth();
 
@@ -47,12 +50,6 @@ function Authentication(props) {
   //       password: '',
   //     },
   //   };
-
-  useEffect(() => {
-    fetch('http://localhost:5500/api/estados').then(async (e) => {
-      let dat = await e.json();
-    });
-  });
 
   function registerFields() {
     return (
@@ -80,54 +77,46 @@ function Authentication(props) {
             </Col>
             <Col md="6">
               <Field
-                label="Nome"
+                label="Denominação"
                 type="text"
                 fieldtype="input"
-                name="emai"
-                msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
-                  show: false,
-                }}
+                name="Designacao"
+              />
+            </Col>
+            <Col md="6">
+              <Field label="NIF" type="text" fieldtype="input" name="Nif" />
+            </Col>
+
+            <Col md="6">
+              <Field
+                label="Telefone"
+                type="text"
+                fieldtype="input"
+                name="Telefone"
               />
             </Col>
             <Col md="6">
               <Field
-                label="Username"
-                type="text"
+                label="Email"
+                type="email"
                 fieldtype="input"
-                name="emai"
-                msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
-                  show: false,
-                }}
+                name="Email"
               />
             </Col>
             <Col md="6">
               <Field
-                label="E-mail"
+                label="Nome de Usúario"
                 type="text"
                 fieldtype="input"
-                name="emai"
-                msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
-                  show: false,
-                }}
+                name="UserName"
               />
             </Col>
             <Col md="6">
               <Field
-                label="E-mail Alternativo"
-                type="text"
+                label="Data Criação"
+                type="date"
                 fieldtype="input"
-                name="emai"
-                msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
-                  show: false,
-                }}
+                name="DataCriacao"
               />
             </Col>
             <Col md="6">
@@ -135,12 +124,7 @@ function Authentication(props) {
                 label="Senha"
                 type="password"
                 fieldtype="input"
-                name="emai"
-                msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
-                  show: false,
-                }}
+                name="Has_PassWord"
               />
             </Col>
             <Col md="6">
@@ -148,43 +132,19 @@ function Authentication(props) {
                 label="Confirmar Senha"
                 type="password"
                 fieldtype="input"
-                name="emai"
-                msm={{
-                  text: 'Email inválido...',
-                  type: 'WARNING',
-                  show: false,
-                }}
+                name="Has_PassWord"
               />
-            </Col>
-            <Col md="6">
-              <div className="form-group mb-2 p-0">
-                <label>Captcha Code</label>
-                <div className="input-group mb-3">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text" id="basic-addon1">
-                      Hjq23YSH
-                    </span>
-                  </div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    aria-label="Username"
-                    aria-describedby="basic-addon1"
-                  />
-                  <div
-                    className="input-group-append"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <span className="input-group-text">
-                      <i className="flaticon-repeat"></i>{' '}
-                    </span>
-                  </div>
-                </div>
-              </div>
             </Col>
 
             <Col xl="12 p-2">
-              <Button className="ml-2 btn-primary">Registrar</Button>
+              <Button
+                onClick={() => {
+                  formRef.current.submitForm();
+                }}
+                className="ml-2 btn-primary"
+              >
+                Registrar
+              </Button>
             </Col>
           </Row>
         </Animated>
@@ -211,9 +171,10 @@ function Authentication(props) {
               Escolha uma Opção
             </div>
             <div className="c-flex" style={{ marginTop: '60px' }}>
-              {options.map((o) => {
+              {options.map((o, i) => {
                 return (
                   <div
+                    key={i}
                     className={`card  c-pointer --b-color-theme orange c-hover card-round ${o.margign}`}
                     style={{ marginLeft: o.margignL }}
                     title={o.name.toUpperCase()}
@@ -244,9 +205,9 @@ function Authentication(props) {
     checker = 'register';
     return (
       <Row className="ml-3 mr-3">
-        {papel === 'Candidato'
+        {papel === 'Empregador'
           ? registerFields()
-          : papel === 'Empregador'
+          : papel === 'Candidato'
           ? registerOptions()
           : registerOptions()}
       </Row>
@@ -281,6 +242,9 @@ function Authentication(props) {
                   type="text"
                   fieldtype="input"
                   name="UserName"
+                  onChange={({ target }) => {
+                    setUserNameOrEmail(target.value);
+                  }}
                 />
               </Col>
             </Row>
@@ -291,13 +255,15 @@ function Authentication(props) {
                   type="password"
                   fieldtype="input"
                   name="PassWord"
-                  msm={password}
+                  onChange={({ target }) => {
+                    setPassword(target.value);
+                  }}
                 />
               </Col>
               <Col md="8 login-center">
                 <div
                   style={{ marginTop: '20px' }}
-                  onClick={(e) => {
+                  onClick={() => {
                     formRef.current.submitForm();
                   }}
                 >
@@ -305,7 +271,7 @@ function Authentication(props) {
                     <span>
                       <i className="flaticon-arrow"></i>
                     </span>
-                    <strong>Inscreva-se na Jobs</strong>
+                    <strong>Inscreva-se</strong>
                   </div>
                 </div>
               </Col>
@@ -324,17 +290,41 @@ function Authentication(props) {
     );
   }
 
-  function refresh(e) {
-    // e.target.parentElement.classList.remove('has-error')
-    // e.target.parentElement.querySelector('small').classList.remove('text-danger')
-    // e.target.parentElement.querySelector('small').innerHTML = ''
+  async function handleSubmit(data, { reset }) {
+    if (checker === 'login') {
+      data = { UserName: userNameOrEmail, PassWord: password };
+      return onLogin({ data, reset });
+    } else if (checker === 'register') {
+      return onRegistry({ data, reset });
+    }
   }
 
-  async function handleSubmit(data, { reset }) {
-    console.log(data);
-    if (checker === 'login') {
-      return onLogin({ data, reset });
-    }
+  async function onRegistry({ data, reset }) {
+    Ischema = {
+      UserName: Yup.string().required('E-mail é obrigatória...'),
+      Has_PassWord: Yup.string().required('A palavra passe é obrigatória...'),
+      Designacao: Yup.string().required('A palavra passe é obrigatória...'),
+      Nif: Yup.string().required('A palavra passe é obrigatória...'),
+      DataCriacao: Yup.date().required('A palavra passe é obrigatória...'),
+      Email: Yup.string().required('A palavra passe é obrigatória...'),
+      Telefone: Yup.string().required('A palavra passe é obrigatória...'),
+    };
+
+    const isValid = await unFormValidator(formRef, { data, reset }, Ischema);
+
+    if (!isValid.success) return;
+    console.log(isValid);
+
+    const response = await iService.store({
+      table: 'Empresa',
+      type: 'STORE',
+      useExclamation: false,
+      properties: 'Id',
+      value: data,
+    });
+
+    if (response.errors) return toast.error(response.errors[0].message);
+    return toast.success('Empresa adicionada.');
   }
 
   async function onLogin({ data, reset }) {
@@ -344,8 +334,10 @@ function Authentication(props) {
     };
 
     const isValid = await unFormValidator(formRef, { data, reset }, Ischema);
-    console.log(isValid);
     if (isValid.success) {
+      if (window.location.pathname.toLocaleLowerCase() === '/mobile-root')
+        data.Provider = 0;
+      else data.Provider = 1;
       signIn(data);
     }
   }

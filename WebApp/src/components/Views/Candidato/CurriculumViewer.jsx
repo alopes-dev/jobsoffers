@@ -43,6 +43,7 @@ import { CurriculumSchema, CandidaturaCurriculo } from './schemas/curriculo';
 import formatValue from '../../../formatValue';
 import { toast } from 'react-toastify';
 import { approveCandidato } from '../../../store/funcs/fetch';
+import { isEmpty } from '../../../helpers';
 
 export default function CurriculumViewer(props) {
   const [curriculo, setCurriculo] = useState({});
@@ -54,10 +55,14 @@ export default function CurriculumViewer(props) {
   const [candidaturaCurriculo, setCandidaturaCurriculo] = useState([]);
   const [tipoDocumentos, setTipoDocumentos] = useState([]);
   const [reload, setReload] = useState(null);
+  const [detalhe, setDetalhe] = useState('');
 
   const { CandidatoId, CandidaturaId } = JSON.parse(
     localStorage.getItem('@Candidatura')
   );
+
+  const { EmpresaId } = JSON.parse(localStorage.getItem('@jobs:user'));
+
   const [modal, setModal] = useState(false);
   const formRef = useRef(null);
 
@@ -102,7 +107,12 @@ export default function CurriculumViewer(props) {
       properties: CandidaturaCurriculo,
     });
 
-    if (response.ok) setCandidaturaCurriculo(response.data);
+    const canditaturaFiltered = response.data?.filter(
+      ({ Oportunidade, Id }) =>
+        Oportunidade.EmpresaId === EmpresaId && Id !== CandidaturaId
+    );
+
+    if (response.ok) setCandidaturaCurriculo(canditaturaFiltered);
   }
 
   useEffect(() => {
@@ -273,6 +283,20 @@ export default function CurriculumViewer(props) {
   }
 
   function curriculoCandidaturas() {
+    if (isEmpty(candidaturaCurriculo))
+      return (
+        <div className="card card-pricing">
+          <div className="card-header">
+            <h4
+              className="card-title text-warning"
+              style={{ fontSize: '18px' }}
+            >
+              Nenhuma candidatura relacionada encontrada!!
+            </h4>
+          </div>
+        </div>
+      );
+
     return candidaturaCurriculo.map(({ Oportunidade, Id }, index) => {
       return (
         <div className="card card-pricing" key={index}>
@@ -379,6 +403,8 @@ export default function CurriculumViewer(props) {
 
   async function handleSubmit(data, { reset }) {
     data.CandidaturaId = CandidaturaId;
+    data.DetalheEspecifico = detalhe;
+    data.PessoaId = CandidatoId;
 
     const Ischema = {
       TipoDocumentoId: Yup.string().required(
@@ -426,6 +452,10 @@ export default function CurriculumViewer(props) {
             <Field
               label="Detalhe de documentos específico"
               fieldtype="textarea"
+              onChange={(e) => {
+                console.log(e.target.value, e.value);
+                setDetalhe(e.target.value);
+              }}
               name="DetalheEspecifico"
               options={[]}
               isDisabled={![]}

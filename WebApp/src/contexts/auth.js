@@ -43,13 +43,14 @@ export const AuthProvider = ({ children }) => {
 
   async function signIn(data) {
     // setProcessing(true);
-    data.Provider = 1;
+    // data.Provider = 1;
+    console.log(data);
 
     const response = await api.store({
       table: 'Settion',
       useExclamation: true,
       type: 'STORE',
-      properties: 'UserName, Provider, Email, EmpresaId',
+      properties: 'UserName, Provider, Email, EmpresaId PessoaId',
       value: data,
     });
 

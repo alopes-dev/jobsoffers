@@ -1,36 +1,32 @@
-import React, { useCallback, useState } from "react";
-import { Container, Content, Footer, TabIcons, ScrollView } from "./styles";
-import MobileHomeScreen from "./pages/home";
-import MobileProfileScreen from "./pages/profiles";
-import MobileSettingsScreen from "./pages/settings";
-import MobileNotificationsScreen from "./pages/notifications";
-import { useMobileApp } from "./contexts/app";
+import React, { useCallback, useState } from 'react';
+import { Container, Content, Footer, TabIcons, ScrollView } from './styles';
+import MobileHomeScreen from './pages/home';
+import MobileProfileScreen from './pages/profiles';
+import MobileSettingsScreen from './pages/settings';
+import MobileNotificationsScreen from './pages/notifications';
+import { useMobileApp } from './contexts/app';
 
 function MobileCore() {
-  const { setAppCurrentStack, appCurrentStack } = useMobileApp();
-  const [tabActive, setTabActive] = useState("");
+  const [tabActive, setTabActive] = useState('');
 
   const handleIconClick = (tabIconId) => {
-    Array.from(document.querySelectorAll(".tab-icons")).forEach((tab) =>
-      tab.querySelector("i").classList.remove("active")
+    Array.from(document.querySelectorAll('.tab-icons')).forEach((tab) =>
+      tab.querySelector('i').classList.remove('active')
     );
     setTabActive(tabIconId);
-    setAppCurrentStack([
-      ...appCurrentStack,
-      { parent: tabIconId, backScreen: true },
-    ]);
-    document.querySelector(`#${tabIconId} i`).classList.add("active");
+
+    document.querySelector(`#${tabIconId} i`).classList.add('active');
   };
 
   const mobileBodyRender = useCallback(() => {
     switch (tabActive) {
-      case "mobile-home":
+      case 'mobile-home':
         return <MobileHomeScreen />;
-      case "mobile-profile":
+      case 'mobile-profile':
         return <MobileProfileScreen />;
-      case "mobile-alarm":
+      case 'mobile-alarm':
         return <MobileNotificationsScreen />;
-      case "mobile-settings":
+      case 'mobile-settings':
         return <MobileSettingsScreen />;
       default:
         return <MobileHomeScreen />;
@@ -44,35 +40,35 @@ function MobileCore() {
       </Content>
       <Footer>
         <TabIcons
-          onClick={() => handleIconClick("mobile-favorite")}
+          onClick={() => handleIconClick('mobile-favorite')}
           className="tab-icons"
           id="mobile-favorite"
         >
           <i className="flaticon-like-1"></i>
         </TabIcons>
         <TabIcons
-          onClick={() => handleIconClick("mobile-profile")}
+          onClick={() => handleIconClick('mobile-profile')}
           className="tab-icons"
           id="mobile-profile"
         >
           <i className="flaticon-profile"></i>
         </TabIcons>
         <TabIcons
-          onClick={() => handleIconClick("mobile-home")}
+          onClick={() => handleIconClick('mobile-home')}
           className="tab-icons"
           id="mobile-home"
         >
           <i className="flaticon-home active"></i>
         </TabIcons>
         <TabIcons
-          onClick={() => handleIconClick("mobile-alarm")}
+          onClick={() => handleIconClick('mobile-alarm')}
           className="tab-icons"
           id="mobile-alarm"
         >
           <i className="flaticon-alarm"></i>
         </TabIcons>
         <TabIcons
-          onClick={() => handleIconClick("mobile-settings")}
+          onClick={() => handleIconClick('mobile-settings')}
           className="tab-icons"
           id="mobile-settings"
         >

@@ -7,7 +7,7 @@ const { HobesResolve, HobesMutation } = require('./HobesSchema');
 const { CargoResolve } = require('./CargosSchema');
 const { CidadeResolve } = require('./CidadesSchema');
 const { DetalheResolve, DetalheMutation } = require('./DetalhesSchema');
-const { EmpresaResolve } = require('./EmpresasSchema');
+const { EmpresaResolve, EmpresaMutation } = require('./EmpresasSchema');
 const { ContactoResolve } = require('./ContactosSchema');
 const { CandidatoResolve } = require('./CandidatosSchema');
 const { BeneficioResolve } = require('./BeneficiosSchema');
@@ -126,6 +126,7 @@ const RootMutation = new GraphQLObjectType({
         ...OportunidadeMutation,
         ...PessoaIdiomasMutation,
         ...SolicitacaoDocumentoMutation,
+        ...EmpresaMutation,
         // ...AvaliacaoCurriculoMutation,
         // ...TipoEmpregoMutation,
         // ...TipoFormacaoMutation,

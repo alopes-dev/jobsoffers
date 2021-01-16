@@ -14,6 +14,7 @@ import CurriculumViewer from '../Views/Candidato/CurriculumViewer';
 import MobileCore from '../../mobile';
 import EmpresaCore from '../Views/Empresa';
 import OportunidadeDetailsCore from '../Views/Oportunidade/oportunidadeDetailsCore';
+import AdministrationCore from '../Views/Administration';
 
 export default function MainRouter() {
   return (
@@ -32,6 +33,7 @@ export default function MainRouter() {
         <Route path="/list-candidato" component={ListCandidato} />
         <Route path="/enterprise" component={EmpresaCore} />
         <Route path="/candidato" component={AddCandidato} />
+        <Route path="/administracao" component={AdministrationCore} />
 
         {/* Mobiles Routers */}
         <Route path="/mobile-root" component={MobileCore} />
