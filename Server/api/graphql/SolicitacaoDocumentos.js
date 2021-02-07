@@ -138,6 +138,21 @@ const SolicitacaoDocumentoMutation = {
             }
         },
     },
+    updateNotification: {
+        type: SolicitacaoDocumentoType,
+        args: {
+            Id: { type: new GraphQLNonNull(GraphQLString) },
+            Status: { type: new GraphQLNonNull(GraphQLInt) },
+        },
+        resolve(parent, args) {
+            return SolicitacaoDocumento.update({
+                    Status: args.Status,
+                    UpdatedAt: new Date().toJSON(),
+                }, { where: { Id: args.Id } })
+                .then((e) => args)
+                .catch((err) => err);
+        },
+    },
 };
 module.exports = {
     SolicitacaoDocumentoResolve,

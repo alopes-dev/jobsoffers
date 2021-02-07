@@ -96,6 +96,7 @@ const PessoaInput = new GraphQLInputObjectType({
         Localizacao: { type: GraphQLString },
         Foto: { type: GraphQLString },
         Status: { type: GraphQLInt },
+        Provider: { type: GraphQLInt },
         DocumentoId: { type: GraphQLString },
         Documento: { type: new GraphQLList(DocumentoInput) },
         ContactoId: { type: GraphQLString },
@@ -170,7 +171,7 @@ const PessoaMutation = {
                 delete input.Contacto;
                 delete input.Documento;
                 delete input.Has_PassWord;
-
+                console.log(Provider);
                 /**
                  * Check user
                  */
@@ -210,7 +211,7 @@ const PessoaMutation = {
 
                 if (ContactoId) await addContactoPessoa([{ PessoaId, ContactoId }]);
 
-                if (isEmpty(Provider)) Provider = 1;
+                if (Provider !== 0) Provider = 1;
 
                 if (isEmpty(PassWord)) PassWord = await passWord_Hash(CodeGenerator());
 

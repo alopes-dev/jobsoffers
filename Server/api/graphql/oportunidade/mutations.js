@@ -129,6 +129,21 @@ const OportunidadeMutation = {
             return await Oportunidade.destroy({ where: { Id: args.Id } });
         },
     },
+    deleteOrUpdateOportunidade: {
+        type: OportunidadeType,
+        args: {
+            Id: { type: new GraphQLNonNull(GraphQLString) },
+        },
+        async resolve(parent, { input, Id }) {
+            const sysdate = new Date(Date.now());
+            const data = await Oportunidade.update({
+                Status: 0,
+                UpdatedAt: sysdate,
+            }, { where: { Id } });
+
+            return data;
+        },
+    },
 };
 
 module.exports = OportunidadeMutation;
