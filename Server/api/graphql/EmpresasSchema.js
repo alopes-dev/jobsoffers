@@ -25,7 +25,6 @@ const EmpresaType = new GraphQLObjectType({
         Visao: { type: GraphQLString },
         SectorDeAtividade: { type: GraphQLString },
         Telefone: { type: GraphQLString },
-        RuaId: { type: GraphQLString },
         // Rua: {
         //   type: EstadoType,
         //   resolve(prev, args) {

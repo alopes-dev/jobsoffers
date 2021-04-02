@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Modal, Button } from 'reactstrap';
-import { Form } from '@unform/core';
+import { Form } from '@unform/web';
 
 const SettingDetails = ({ details, title, callback, componentRender }) => {
   const [isOpen, setIsOpen] = useState(false);

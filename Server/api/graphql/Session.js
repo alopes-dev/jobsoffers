@@ -41,7 +41,6 @@ const SettionMutation = {
     },
     async resolve(_, { input }) {
       try {
-        console.log(input);
         const { PassWord, UserName, Provider } = input;
 
         const userExist = await User.findOne({ where: { UserName } });
@@ -62,6 +61,28 @@ const SettionMutation = {
       }
     },
   },
+  resetPassword: {
+    type: SettionType,
+    args: {
+      input: {
+        type: new GraphQLNonNull(SettionInput),
+      },
+    },
+    async resolve(parent, { input }) {
+      const { PassWord, UserName } = input;
+
+      const userExist = await User.findOne({ where: { UserName } });
+
+      if (!userExist) throw new Error('Usuario não encontrado...');
+
+     const password_hash = await bcrypt.hash(PassWord, 8)
+
+        return await User.update({
+          PassWord: password_hash,
+          UpdatedAt: new Date().toJSON(),
+      }, { where: { UserName } })
+    },
+},
 };
 
 module.exports = {

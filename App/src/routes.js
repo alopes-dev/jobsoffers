@@ -17,15 +17,6 @@ const routes = [{
     },
 
     {
-        name: 'Empregador',
-        path: '/enterprise',
-        icon: 'flaticon-store',
-        layout: '/admin',
-        show: false,
-        components: EmpresaCore,
-    },
-
-    {
         name: 'Oportunidade',
         icon: 'flaticon-idea',
         collapse: true,
@@ -40,13 +31,6 @@ const routes = [{
                 components: CoreOportunidade,
                 privice: 'admin',
             },
-            // {
-            //     name: 'Detalhe da Oportunidade',
-            //     path: '/oportunidades/:id',
-            //     show: false,
-            //     components: CoreOportunidade,
-            //     privice: 'admin',
-            // },
             {
                 name: 'Visão Geral da Oportunidade',
                 path: '/general-view',
@@ -57,35 +41,14 @@ const routes = [{
             },
         ],
     },
-    // {
-    //     name: 'Candidato',
-    //     icon: 'icon-people',
-    //     collapse: true,
-    //     children: [{
-    //             name: 'Candidatos',
-    //             path: '/list-candidato',
-    //             action: 'Listagem',
-    //             components: ListCandidato,
-    //             aliasIcon: 'icon-people',
-    //         },
-    //         {
-    //             name: 'Novo Candidatos',
-    //             path: '/candidato',
-    //             components: AddCandidato,
-    //             action: 'Formúlario',
-    //             privice: 'admin',
-    //             aliasIcon: 'icon-user-follow',
-    //         },
-    //         {
-    //             name: 'Curriculum do Candidato',
-    //             path: '/curriculum-viewer',
-    //             show: false,
-    //             components: CurriculumViewer,
-    //             privice: 'admin',
-    //             aliasIcon: 'flaticon-layers-1',
-    //         },
-    //     ],
-    // },
+    {
+        name: 'Seguradores',
+        path: '/enterprise',
+        icon: 'flaticon-store',
+        layout: '/admin',
+        show: true,
+        components: EmpresaCore,
+    },
     {
         name: 'Candidatos',
         path: '/list-candidato',

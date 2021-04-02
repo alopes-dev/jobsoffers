@@ -5,7 +5,7 @@ import iService from '../../../services/service';
 import { Candidatos } from './schemas/curriculo';
 import { Row, Col } from 'reactstrap';
 import Field from '../../ResusibleComponents/Fields/Field';
-import { Form } from '@unform/core';
+import { Form } from '@unform/web';
 import history from '../../../history';
 import { setSelectOp } from '../../../helpers';
 

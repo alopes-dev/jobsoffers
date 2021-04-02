@@ -10,6 +10,9 @@ body {
 .bg- {
     background: rgb(36 46 78) !important;
 }
+.c-pointer{
+    cursor: pointer;
+}
 
 .clips {
     height: 250px;

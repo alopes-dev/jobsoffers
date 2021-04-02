@@ -31,10 +31,7 @@ const Empresa = db.define('Empresa', {
         type: Sequelize.DATE,
         notEmpty: false,
     },
-    RuaId: {
-        type: Sequelize.STRING(50),
-        notEmpty: false,
-    },
+    
     Visao: {
         type: Sequelize.STRING(50),
         notEmpty: false,

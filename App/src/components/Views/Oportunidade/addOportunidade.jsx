@@ -141,7 +141,7 @@ const AddOportunidade = ({ oportunidadeEdit, ...props }) => {
 
       setTimeout(() => {
         setNavigateTo('list-oportunidade');
-      }, [600]);
+      }, 600);
       return toast.success('Atualizado com successo!!');
     }
 
@@ -168,7 +168,9 @@ const AddOportunidade = ({ oportunidadeEdit, ...props }) => {
     });
     setIsLoandig(false);
     if (response.errors) return toast.error(response.errors[0].message);
-
+    setTimeout(() => {
+      window.location = '/list-oportunidade';
+    },600)
     return toast.success('Oportunidade feito com sucesso!');
   };
 

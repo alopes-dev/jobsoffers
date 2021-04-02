@@ -15,6 +15,7 @@ const AuthContextData = {
   signIn: initialFunc,
   signOut: initialFunc,
   signUp: initialFunc,
+  resetPassword: initialFunc,
 };
 
 const AuthContext = createContext(AuthContextData);
@@ -35,13 +36,12 @@ export const AuthProvider = ({ children }) => {
       setTimeout(() => {
         setLoading(false);
       }, 2500);
-      // }, 0);
     }
 
     loadStorageData();
   }, []);
 
-  async function signIn(data, setIsLoading) {
+  async function signIn(data, setIsLoading, reset) {
     // setProcessing(true);
     // data.Provider = 1;
 
@@ -69,7 +69,31 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('@jobs:user', JSON.stringify(addSettion));
     setUser(addSettion);
     setIsLoading(false);
+    reset()
     return response;
+  }
+
+  async function resetPassword(data , setIsLoading, reset){
+
+    try {
+      await api.useGeneric({
+        query: `mutation settionInput($input: SettionInput!) {
+          resetPassword(input: $input) {
+            Provider
+            PassWord
+          }
+        }
+        `,
+        variables: {input: data },
+      });
+     
+      return toast.success('Senha recuperada com sucesso...');
+    } catch (error) {      return toast.error('Ocorreu um erro...');
+    }finally{
+      reset()
+      setIsLoading(false);
+    }
+     
   }
 
   function signOut() {
@@ -108,6 +132,7 @@ export const AuthProvider = ({ children }) => {
         signOut,
         loading,
         signUp,
+        resetPassword,
         isProcessing,
         flag,
       }}

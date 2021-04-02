@@ -31,7 +31,7 @@ function Authentication(props) {
   const [isSignInScreen, setIsSignInScreen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { signIn } = useAuth();
+  const { signIn, resetPassword } = useAuth();
 
   const options = [
     {
@@ -40,7 +40,7 @@ function Authentication(props) {
       margign: 'mr-3',
       margignL: '60px',
     },
-    { name: 'Empregador', icon: 'empregador.png', margign: 'ml-3' },
+    { name: 'Seguradora', icon: 'empregador.png', margign: 'ml-3' },
   ];
   let checker = 'login';
   let Ischema = null;
@@ -210,7 +210,7 @@ function Authentication(props) {
     checker = 'register';
     return (
       <Row className="ml-3 mr-3">
-        {papel === 'Empregador'
+        {papel === 'Seguradora'
           ? registerFields()
           : papel === 'Candidato'
           ? registerOptions()
@@ -246,7 +246,7 @@ function Authentication(props) {
                   <Col md="8 login-center">
                     {}
                     <Field
-                      label="Email / Username"
+                      label="E-mail / Nome de Usuário"
                       type="text"
                       fieldtype="input"
                       name="UserName"
@@ -259,7 +259,7 @@ function Authentication(props) {
                 <Row>
                   <Col md="8 login-center">
                     <Field
-                      label="Password"
+                      label="Senha"
                       type="password"
                       fieldtype="input"
                       name="PassWord"
@@ -397,47 +397,16 @@ function Authentication(props) {
       return onLogin({ data, reset });
     } else if (checker === 'register') {
       return onRegistry({ data, reset });
+    }else if(checker === "forgetPassword"){
+      data = { UserName: userNameOrEmail, PassWord: password };
+      return onResetPassword({ data, reset });
     }
   }
 
   async function onRegistry({ data, reset }) {
     let label = 'Empresa';
-    if (isSignInScreen)
-      Ischema = {
-        UserName: Yup.string().required('E-mail é obrigatória...'),
-        Has_PassWord: Yup.string().required('A palavra passe é obrigatória...'),
-        Designacao: Yup.string().required('A palavra passe é obrigatória...'),
-        Nif: Yup.string().required('A palavra passe é obrigatória...'),
-        DataCriacao: Yup.date().required('A palavra passe é obrigatória...'),
-        Email: Yup.string().required('A palavra passe é obrigatória...'),
-        Telefone: Yup.string().required('A palavra passe é obrigatória...'),
-      };
-    else {
-      Ischema = {
-        Email: Yup.string().required('E-mail é obrigatória...'),
-        NomeCompleto: Yup.string().required('Nome Completo é obrigatório'),
-        Has_PassWord: Yup.string().required('A palavra passe é obrigatória...'),
-      };
-      label = 'Pessoa';
-      data.Provider = 0;
-    }
-
-    const isValid = await unFormValidator(formRef, { data, reset }, Ischema);
-
-    if (!isValid.success) return;
-
-    delete data.NomeCompleto;
-
-    const response = await iService.store({
-      table: label,
-      type: 'STORE',
-      useExclamation: false,
-      properties: 'Id',
-      value: data,
-    });
-    setIsLoading(false);
-    if (response.errors) return toast.error(response.errors[0].message);
-    return toast.success(`${label} adicionada.`);
+    console.log(data)
+    return
   }
 
   async function onLogin({ data, reset }) {
@@ -446,7 +415,7 @@ function Authentication(props) {
       PassWord: Yup.string().required('A palavra passe é obrigatória...'),
     };
 
-    const isValid = await unFormValidator(formRef, { data, reset }, Ischema);
+    const isValid = await unFormValidator(formRef, { data }, Ischema);
     if (!isValid.success) {
       setIsLoading(false);
       return toast.warning('Os dados estão incorrectos...');
@@ -456,10 +425,183 @@ function Authentication(props) {
       data.Provider = 0;
     else data.Provider = 1;
 
-    signIn(data, setIsLoading);
+    signIn(data, setIsLoading, reset);
   }
 
-  function forgetPassword() {}
+  async function onResetPassword({ data, reset}){
+    Ischema = {
+      UserName: Yup.string().required('E-mail é obrigatória...'),
+      PassWord: Yup.string().required('A palavra passe é obrigatória...'),
+    };
+
+    const isValid = await unFormValidator(formRef, { data }, Ischema);
+    if (!isValid.success) {
+      setIsLoading(false);
+      return toast.warning('Os dados estão incorrectos...');
+    }
+
+    resetPassword(data, setIsLoading, reset);
+    
+  }
+
+  function forgetPassword() {
+    checker = 'forgetPassword';
+    return (
+      <Animated
+        animationIn="jackInTheBox"
+        animationOut="fadeOutUp"
+        animationInDuration={2300}
+        animationOutDuration={1000}
+        isVisible={true}
+      >
+        <Row className="ml-3 mr-3">
+          {/* <Spinner/> */}
+          <Col md="12 login-center">
+            <div
+              className="card-title  mt-4 fw-mediumbold"
+              style={{ marginLeft: '106px', marginTop: '60px' }}
+            >
+              Recuperar a senha
+            </div>
+          </Col>
+          <Col md="12">
+            {isSignInScreen ? (
+              <>
+                <Row style={{ marginTop: '60px' }}>
+                  <Col md="8 login-center">
+                    {}
+                    <Field
+                      label="E-mail / Nome de Usuário"
+                      type="text"
+                      fieldtype="input"
+                      name="UserName"
+                      onChange={({ target }) => {
+                        setUserNameOrEmail(target.value);
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md="8 login-center">
+                    <Field
+                      label="Senha"
+                      type="password"
+                      fieldtype="input"
+                      name="PassWord"
+                      onChange={({ target }) => {
+                        setPassword(target.value);
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </>
+            ) : (
+              <>
+                <Row style={{ marginTop: '60px' }}>
+                  <Col md="8 login-center">
+                    <Field
+                      label="Nome Completo"
+                      type="text"
+                      fieldtype="input"
+                      name="NomeCompleto"
+                      onChange={({ target }) => {
+                        setNomeCompleto(target.value);
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md="8 login-center">
+                    <Field
+                      label="Email"
+                      type="Email"
+                      fieldtype="input"
+                      name="Email"
+                      onChange={({ target }) => {
+                        setUserNameOrEmail(target.value);
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md="8 login-center">
+                    <Field
+                      label="Password"
+                      type="password"
+                      fieldtype="input"
+                      name="Has_PassWord"
+                      onChange={({ target }) => {
+                        setPassword(target.value);
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </>
+            )}
+            <Row>
+              <Col md="8 login-center">
+                <div
+                  style={{ marginTop: '20px' }}
+                  onClick={() => {
+                    formRef.current.submitForm();
+                  }}
+                >
+                  <div className="anchor-button">
+                    <span>
+                      {isLoading ? (
+                        <Loading type={'spin'} width={18} height={18} />
+                      ) : (
+                        <i
+                          className={
+                            isSignInScreen
+                              ? 'flaticon-arrow'
+                              : 'flaticon-add-user'
+                          }
+                        ></i>
+                      )}
+
+                      {/* */}
+                    </span>
+                    <strong>
+                      {isLoading
+                        ? 'Verificando...'
+                        : isSignInScreen
+                        ? 'Recuperar'
+                        : 'Inscreva-se'}
+                    </strong>
+                  </div>
+                </div>
+              </Col>
+              <Col
+                md="8 p-0 login-center button-actions"
+                className={isSignInScreen ? ' mt-5' : ''}
+              >
+                <span
+                  onClick={() => {
+                    setIsSignInScreen(!isSignInScreen);
+                  }}
+                  style={!isSignInScreen ? { margin: '0' } : {}}
+                >
+                  <i
+                    className={
+                      isSignInScreen ? 'flaticon-add-user' : 'flaticon-arrow'
+                    }
+                  ></i>
+                </span>
+                {isSignInScreen ? (
+                  <span>
+                    <i className="flaticon-repeat"></i>
+                  </span>
+                ) : (
+                  ''
+                )}
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Animated>
+    );
+  }
   return (
     <>
       <Container>

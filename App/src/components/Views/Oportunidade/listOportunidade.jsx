@@ -11,7 +11,7 @@ import { setOportunidadeId } from '../../../store/actions/oportunidade';
 import history from '../../../history';
 import { Row, Col, Button } from 'reactstrap';
 import Field from '../../ResusibleComponents/Fields/Field';
-import { Form } from '@unform/core';
+import { Form } from '@unform/web';
 import { useRef } from 'react';
 
 import iService from '../../../services/service';

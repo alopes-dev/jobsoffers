@@ -1,6 +1,7 @@
-import React from 'react';
-import { useEmpresa } from '../../../contexts/empresa';
-import { Card, CardBody } from 'reactstrap';
+import React from "react";
+import { useEmpresa } from "../../../contexts/empresa";
+import { Card, CardBody } from "reactstrap";
+import InsurenceTable from "./empre-table";
 
 const EmpresaCore = (props) => {
   const { enterprise } = useEmpresa();
@@ -8,7 +9,7 @@ const EmpresaCore = (props) => {
   return (
     <Card>
       <CardBody>
-        <h1>antonio</h1>
+        <InsurenceTable />
       </CardBody>
     </Card>
   );
