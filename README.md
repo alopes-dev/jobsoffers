@@ -1,9 +1,9 @@
 # jobs Offers
 TCC
 
-``js
+```js
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<App />, rootElement);
 
-``
+```
